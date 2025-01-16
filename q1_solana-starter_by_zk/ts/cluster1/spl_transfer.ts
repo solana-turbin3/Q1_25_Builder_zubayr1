@@ -16,10 +16,10 @@ const commitment: Commitment = "confirmed";
 const connection = new Connection("https://api.devnet.solana.com", commitment);
 
 // Mint address
-const mint = new PublicKey("AabZjX2nxLXgJWowm2my18FKZo8zC1vUMRT64rGCm4Dm");
+const mint = new PublicKey("4XLH8Dt7fGjtfp6DfFfHZgxgifa3UWb6Kvnu7GeeMyuH");
 
 // Recipient address
-const to = new PublicKey("tvewhNeSPrqRXRMGSiKRdRZVo2yHjHBHLhfL2QfkUav");
+const to = new PublicKey("2oCZp7RrExMoGoVTsGuoTtgbyBR99ewJzHuWh8m1XBoj");
 
 (async () => {
   try {

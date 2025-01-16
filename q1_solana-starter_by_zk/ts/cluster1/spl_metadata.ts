@@ -1,4 +1,4 @@
-import wallet from "../dev-wallet.json";
+import wallet from "../wba-wallet.json";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import {
   createMetadataAccountV3,
@@ -14,7 +14,7 @@ import {
 import { bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 
 // Define our Mint address
-const mint = publicKey("AabZjX2nxLXgJWowm2my18FKZo8zC1vUMRT64rGCm4Dm");
+const mint = publicKey("4XLH8Dt7fGjtfp6DfFfHZgxgifa3UWb6Kvnu7GeeMyuH");
 
 // Create a UMI connection
 const umi = createUmi("https://api.devnet.solana.com");
@@ -31,8 +31,8 @@ umi.use(signerIdentity(createSignerFromKeypair(umi, keypair)));
     };
 
     let data: DataV2Args = {
-      name: "Solana Starter",
-      symbol: "SS",
+      name: "enchanted_bunny",
+      symbol: "EB",
       uri: "https://solanastarter.com",
       sellerFeeBasisPoints: 5,
       creators: null,
