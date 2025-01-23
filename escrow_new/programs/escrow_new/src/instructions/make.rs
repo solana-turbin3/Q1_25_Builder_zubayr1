@@ -5,7 +5,7 @@ use anchor_spl::associated_token::AssociatedToken;
 use crate::Escrow;
 
 #[derive(Accounts)]
-#[instruction(seeds: u64)]
+#[instruction(seed: u64)]
 pub struct Make<'info> {
     #[account(mut)]
     pub maker: Signer<'info>,
@@ -24,7 +24,7 @@ pub struct Make<'info> {
         init,
         payer = maker,
         space = 8 + Escrow::INIT_SPACE,
-        seeds = [b"escrow", maker.key().as_ref(), seeds.to_le_bytes().as_ref()],
+        seeds = [b"escrow", maker.key().as_ref(), seed.to_le_bytes().as_ref()],
         bump
     )]
     pub escrow: Account<'info, Escrow>,
@@ -43,13 +43,13 @@ pub struct Make<'info> {
 }
 
 impl<'info> Make<'info> {
-    pub fn init_escrow(&mut self, seeds: u64, receive: u64, bumps: &MakeBumps) -> Result<()> {
+    pub fn init_escrow(&mut self, seed: u64, receive: u64, bumps: &MakeBumps) -> Result<()> {
         self.escrow.set_inner(Escrow {
             maker: self.maker.key(),
             mint_a: self.mint_a.key(),
             mint_b: self.mint_b.key(),
             receive,
-            seeds,
+            seed,
             bump: bumps.escrow,
         });
         Ok(())
