@@ -23,8 +23,8 @@ pub mod escrow_new {
         Ok(())
     }
 
-    pub fn deposit_by_taker(ctx: Context<Take>, deposit: u64) -> Result<()> {
-        ctx.accounts.deposit_by_taker(deposit)?;
+    pub fn deposit_by_taker(ctx: Context<Take>) -> Result<()> {
+        ctx.accounts.deposit_by_taker()?;
         Ok(())
     }
 
