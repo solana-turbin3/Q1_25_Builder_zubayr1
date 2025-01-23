@@ -4,9 +4,10 @@ use anchor_spl::token_interface::{
     transfer_checked, Mint, TokenAccount, TokenInterface, TransferChecked, CloseAccount, close_account
 };
 
-use crate::state::Escrow;
+use crate::Escrow;
 
 #[derive(Accounts)]
+#[instruction(seeds: u64)]
 pub struct Take<'info> {
     #[account(mut)]
     pub taker: Signer<'info>,
