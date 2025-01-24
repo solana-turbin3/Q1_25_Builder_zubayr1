@@ -128,6 +128,9 @@ export type OneCs = {
     },
     {
       "name": "editData",
+      "docs": [
+        "Edit the encapsulated data"
+      ],
       "discriminator": [
         121,
         33,
@@ -329,6 +332,9 @@ export type OneCs = {
     },
     {
       "name": "removePermission",
+      "docs": [
+        "Remove a permission from the permission list"
+      ],
       "discriminator": [
         122,
         51,
@@ -427,6 +433,9 @@ export type OneCs = {
     },
     {
       "name": "transferOwnership",
+      "docs": [
+        "Transfer ownership of the permission data account"
+      ],
       "discriminator": [
         65,
         177,
@@ -612,6 +621,10 @@ export type OneCs = {
                 }
               }
             }
+          },
+          {
+            "name": "bump",
+            "type": "u8"
           }
         ]
       }

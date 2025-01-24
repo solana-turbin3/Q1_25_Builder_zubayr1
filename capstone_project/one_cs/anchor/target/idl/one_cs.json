@@ -122,6 +122,9 @@
     },
     {
       "name": "edit_data",
+      "docs": [
+        "Edit the encapsulated data"
+      ],
       "discriminator": [
         121,
         33,
@@ -323,6 +326,9 @@
     },
     {
       "name": "remove_permission",
+      "docs": [
+        "Remove a permission from the permission list"
+      ],
       "discriminator": [
         122,
         51,
@@ -421,6 +427,9 @@
     },
     {
       "name": "transfer_ownership",
+      "docs": [
+        "Transfer ownership of the permission data account"
+      ],
       "discriminator": [
         65,
         177,
@@ -606,6 +615,10 @@
                 }
               }
             }
+          },
+          {
+            "name": "bump",
+            "type": "u8"
           }
         ]
       }
