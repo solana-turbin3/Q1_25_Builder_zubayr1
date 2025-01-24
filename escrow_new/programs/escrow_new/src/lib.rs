@@ -1,10 +1,10 @@
 use anchor_lang::prelude::*;
 
-mod state;
 mod instructions;
+mod state;
 
-use state::*;
 use instructions::*;
+use state::*;
 
 declare_id!("FWYA7T8maAWUeWvsUSBfJQJvtb9hx61Fj6hkVBsUBEnh");
 
@@ -30,6 +30,11 @@ pub mod escrow_new {
 
     pub fn withdraw_and_close_vault(ctx: Context<Take>) -> Result<()> {
         ctx.accounts.withdraw_and_close_vault()?;
+        Ok(())
+    }
+
+    pub fn refund_and_close(ctx: Context<Refund>) -> Result<()> {
+        ctx.accounts.refund_and_close()?;
         Ok(())
     }
 }
