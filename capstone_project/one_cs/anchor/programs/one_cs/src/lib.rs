@@ -55,8 +55,17 @@ pub mod one_cs {
         ctx: Context<TransferOwnership>,
         _label: String,
         new_owner: Pubkey,
+        ownership_time: u64,
     ) -> Result<()> {
-        ctx.accounts.transfer_ownership(_label, new_owner)?;
+        ctx.accounts
+            .transfer_ownership(_label, new_owner, ownership_time, &ctx.bumps)?;
+
+        Ok(())
+    }
+
+    /// Accept ownership of the permission data account
+    pub fn accept_ownership(ctx: Context<AcceptOwnership>, _label: String) -> Result<()> {
+        ctx.accounts.accept_ownership(_label)?;
 
         Ok(())
     }
