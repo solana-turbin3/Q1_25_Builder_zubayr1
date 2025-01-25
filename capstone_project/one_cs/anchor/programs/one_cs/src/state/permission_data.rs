@@ -28,3 +28,11 @@ pub struct PermissionData {
     pub permissions: Vec<Permission>,
     pub bump: u8,
 }
+
+#[account]
+#[derive(InitSpace)]
+pub struct DelegatedOwner {
+    pub new_owner: Pubkey,
+    pub ownership_time: u64,
+    pub bump: u8,
+}
