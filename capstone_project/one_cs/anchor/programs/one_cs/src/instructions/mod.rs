@@ -1,9 +1,11 @@
+pub mod accept_ownership;
 pub mod add_permission;
 pub mod edit_data;
 pub mod encapsulate;
 pub mod remove_permission;
 pub mod transfer_ownership;
 
+pub use accept_ownership::*;
 pub use add_permission::*;
 pub use edit_data::*;
 pub use encapsulate::*;
