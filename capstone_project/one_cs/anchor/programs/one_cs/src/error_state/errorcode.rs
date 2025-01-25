@@ -10,4 +10,7 @@ pub enum ErrorCode {
 
     #[msg("Invalid time")]
     InvalidTime,
+
+    #[msg("Time not reached")]
+    TimeNotReached,
 }
