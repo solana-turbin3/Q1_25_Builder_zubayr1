@@ -14,6 +14,172 @@ export type OneCs = {
   },
   "instructions": [
     {
+      "name": "acceptOwnership",
+      "docs": [
+        "Accept ownership of the permission data account"
+      ],
+      "discriminator": [
+        172,
+        23,
+        43,
+        13,
+        238,
+        213,
+        85,
+        150
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "encapsulatedData",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  115
+                ]
+              },
+              {
+                "kind": "const",
+                "value": [
+                  9,
+                  43,
+                  225,
+                  230,
+                  237,
+                  13,
+                  216,
+                  237,
+                  44,
+                  121,
+                  170,
+                  202,
+                  171,
+                  13,
+                  123,
+                  122,
+                  17,
+                  76,
+                  28,
+                  165,
+                  22,
+                  109,
+                  84,
+                  97,
+                  252,
+                  22,
+                  20,
+                  59,
+                  1,
+                  116,
+                  88,
+                  174
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
+        },
+        {
+          "name": "delegatedOwner",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  108,
+                  101,
+                  103,
+                  97,
+                  116,
+                  101,
+                  100,
+                  95,
+                  111,
+                  119,
+                  110,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "const",
+                "value": [
+                  9,
+                  43,
+                  225,
+                  230,
+                  237,
+                  13,
+                  216,
+                  237,
+                  44,
+                  121,
+                  170,
+                  202,
+                  171,
+                  13,
+                  123,
+                  122,
+                  17,
+                  76,
+                  28,
+                  165,
+                  22,
+                  109,
+                  84,
+                  97,
+                  252,
+                  22,
+                  20,
+                  59,
+                  1,
+                  116,
+                  88,
+                  174
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "label",
+          "type": "string"
+        }
+      ]
+    },
+    {
       "name": "addPermission",
       "docs": [
         "Add a new permission to the permission list"
@@ -518,6 +684,75 @@ export type OneCs = {
           }
         },
         {
+          "name": "delegatedOwner",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  108,
+                  101,
+                  103,
+                  97,
+                  116,
+                  101,
+                  100,
+                  95,
+                  111,
+                  119,
+                  110,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "const",
+                "value": [
+                  9,
+                  43,
+                  225,
+                  230,
+                  237,
+                  13,
+                  216,
+                  237,
+                  44,
+                  121,
+                  170,
+                  202,
+                  171,
+                  13,
+                  123,
+                  122,
+                  17,
+                  76,
+                  28,
+                  165,
+                  22,
+                  109,
+                  84,
+                  97,
+                  252,
+                  22,
+                  20,
+                  59,
+                  1,
+                  116,
+                  88,
+                  174
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
+        },
+        {
           "name": "systemProgram",
           "address": "11111111111111111111111111111111"
         }
@@ -530,11 +765,28 @@ export type OneCs = {
         {
           "name": "newOwner",
           "type": "pubkey"
+        },
+        {
+          "name": "ownershipTime",
+          "type": "u64"
         }
       ]
     }
   ],
   "accounts": [
+    {
+      "name": "delegatedOwner",
+      "discriminator": [
+        46,
+        106,
+        155,
+        80,
+        149,
+        206,
+        156,
+        161
+      ]
+    },
     {
       "name": "permissionData",
       "discriminator": [
@@ -564,9 +816,34 @@ export type OneCs = {
       "code": 6002,
       "name": "invalidTime",
       "msg": "Invalid time"
+    },
+    {
+      "code": 6003,
+      "name": "timeNotReached",
+      "msg": "Time not reached"
     }
   ],
   "types": [
+    {
+      "name": "delegatedOwner",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "newOwner",
+            "type": "pubkey"
+          },
+          {
+            "name": "ownershipTime",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
     {
       "name": "permission",
       "type": {

@@ -409,7 +409,7 @@ describe("one_cs", () => {
 
   it("transfer ownership", async () => {
     await program.methods
-      .transferOwnership(label, newPublicKey)
+      .transferOwnership(label, newPublicKey, new anchor.BN(0))
       .accounts({
         owner: payer.publicKey,
       })
@@ -426,7 +426,7 @@ describe("one_cs", () => {
     expect(encapsulatedData.permissions[2].role).toEqual({ owner: {} });
 
     await program.methods
-      .transferOwnership(label, newPublicKey3)
+      .transferOwnership(label, newPublicKey3, new anchor.BN(1111))
       .accounts({
         owner: newPublicKey,
       })
@@ -442,5 +442,40 @@ describe("one_cs", () => {
     expect(encapsulatedData.permissions[1].role).toEqual({ admin: {} });
     expect(encapsulatedData.permissions[2].role).toEqual({ admin: {} });
     expect(encapsulatedData.permissions[3].role).toEqual({ owner: {} });
+  });
+
+  it("accept ownership", async () => {
+    // Ideally would be a future time
+    const currentTimePlusSomeSeconds = Math.floor(Date.now() / 1000) + 0;
+
+    await program.methods
+      .transferOwnership(
+        label,
+        newPublicKey,
+        new anchor.BN(currentTimePlusSomeSeconds)
+      )
+      .accounts({
+        owner: newPublicKey3,
+      })
+      .signers([newKeypair3])
+      .rpc({ commitment: "confirmed" });
+
+    await program.methods
+      .acceptOwnership(label)
+      .accounts({
+        signer: newPublicKey,
+      })
+      .signers([newKeypair])
+      .rpc({ commitment: "confirmed" });
+
+    let encapsulatedData = await program.account.permissionData.fetch(
+      encapsulatePDA
+    );
+
+    expect(encapsulatedData.owner).toEqual(newPublicKey);
+    expect(encapsulatedData.permissions[0].role).toEqual({ admin: {} });
+    expect(encapsulatedData.permissions[1].role).toEqual({ admin: {} });
+    expect(encapsulatedData.permissions[2].role).toEqual({ owner: {} });
+    expect(encapsulatedData.permissions[3].role).toEqual({ admin: {} });
   });
 });
