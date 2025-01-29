@@ -2,7 +2,7 @@ import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { Keypair, PublicKey } from "@solana/web3.js";
 import { BankrunProvider } from "anchor-bankrun";
-import { startAnchor } from "solana-bankrun";
+import { startAnchor, BanksClient, Clock } from "solana-bankrun";
 import { OneCs } from "../target/types/one_cs";
 import { SYSTEM_PROGRAM_ID } from "@coral-xyz/anchor/dist/cjs/native/system";
 
@@ -24,6 +24,8 @@ describe("one_cs", () => {
   let newPublicKey2: PublicKey;
   let newKeypair3: Keypair;
   let newPublicKey3: PublicKey;
+
+  let banksClient: BanksClient;
 
   beforeAll(async () => {
     newKeypair = new anchor.web3.Keypair();
@@ -73,6 +75,8 @@ describe("one_cs", () => {
     anchor.setProvider(provider);
     program = new Program<OneCs>(IDL, provider);
     payer = provider.wallet.payer;
+
+    banksClient = context.banksClient;
 
     [encapsulatePDA] = PublicKey.findProgramAddressSync(
       [
@@ -446,7 +450,7 @@ describe("one_cs", () => {
 
   it("accept ownership", async () => {
     // Ideally would be a future time
-    const currentTimePlusSomeSeconds = Math.floor(Date.now() / 1000) + 0;
+    const currentTimePlusSomeSeconds = Math.floor(Date.now() / 1000) + 1;
 
     await program.methods
       .transferOwnership(
@@ -459,6 +463,17 @@ describe("one_cs", () => {
       })
       .signers([newKeypair3])
       .rpc({ commitment: "confirmed" });
+
+    const currentClock = await banksClient.getClock();
+    context.setClock(
+      new Clock(
+        currentClock.slot,
+        currentClock.epochStartTimestamp,
+        BigInt(currentClock.epoch),
+        BigInt(currentClock.leaderScheduleEpoch),
+        BigInt(currentTimePlusSomeSeconds + 2)
+      )
+    );
 
     await program.methods
       .acceptOwnership(label)
