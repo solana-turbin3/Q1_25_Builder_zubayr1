@@ -18,8 +18,7 @@ pub struct RemovePermission<'info> {
     )]
     pub encapsulated_data: Account<'info, PermissionData>,
 
-    /// CHECK: This field is not an account; it represents a wallet's public key.
-    pub permitted_wallet: AccountInfo<'info>,
+    pub permitted_wallet: SystemAccount<'info>,
 
     pub system_program: Program<'info, System>,
 }
