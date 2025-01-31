@@ -3,7 +3,7 @@ use anchor_lang::prelude::*;
 
 #[derive(Accounts)]
 #[instruction(label: String)]
-pub struct Encapsulate<'info> {
+pub struct EncapsulateText<'info> {
     #[account(mut)]
     pub owner: Signer<'info>,
 
@@ -19,17 +19,20 @@ pub struct Encapsulate<'info> {
     pub system_program: Program<'info, System>,
 }
 
-impl<'info> Encapsulate<'info> {
-    pub fn encapsulate(
+impl<'info> EncapsulateText<'info> {
+    pub fn encapsulate_text(
         &mut self,
-        bumps: &EncapsulateBumps,
+        bumps: &EncapsulateTextBumps,
         label: String,
         data: String,
     ) -> Result<()> {
         self.encapsulated_data.set_inner(PermissionData {
             owner: self.owner.key(),
             label,
-            data,
+            data: EncapsulatedData {
+                text: Some(data),
+                token: None,
+            },
             permissions: vec![Permission {
                 role: Role::Owner,
                 wallet: self.owner.key(),
