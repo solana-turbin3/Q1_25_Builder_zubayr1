@@ -15,9 +15,13 @@ declare_id!("coUnmi3oBUtwtd9fjeAvSsJssXh5A5xyPbhpewyzRVF");
 pub mod one_cs {
     use super::*;
 
-    /// Encapsulate the data and create a new permission data account
-    pub fn encapsulate(ctx: Context<Encapsulate>, label: String, data: String) -> Result<()> {
-        ctx.accounts.encapsulate(&ctx.bumps, label, data)?;
+    /// Encapsulate the text data and create a new permission data account
+    pub fn encapsulate_text(
+        ctx: Context<EncapsulateText>,
+        label: String,
+        data: String,
+    ) -> Result<()> {
+        ctx.accounts.encapsulate_text(&ctx.bumps, label, data)?;
 
         Ok(())
     }
@@ -43,9 +47,9 @@ pub mod one_cs {
         Ok(())
     }
 
-    /// Edit the encapsulated data
-    pub fn edit_data(ctx: Context<EditData>, _label: String, data: String) -> Result<()> {
-        ctx.accounts.edit_data(_label, data)?;
+    /// Edit the encapsulated text data
+    pub fn edit_text_data(ctx: Context<EditTextData>, _label: String, data: String) -> Result<()> {
+        ctx.accounts.edit_text_data(_label, data)?;
 
         Ok(())
     }
