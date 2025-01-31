@@ -89,8 +89,10 @@ describe("one_cs", () => {
   });
 
   it("encapsulate", async () => {
+    const dataObject = { text: data, token: null };
+
     await program.methods
-      .encapsulate(label, data)
+      .encapsulateText(label, data)
       .accounts({
         owner: payer.publicKey,
       })
@@ -102,7 +104,7 @@ describe("one_cs", () => {
 
     expect(encapsulatedData.owner).toEqual(payer.publicKey);
     expect(encapsulatedData.label).toEqual(label);
-    expect(encapsulatedData.data).toEqual(data);
+    expect(encapsulatedData.data).toEqual(dataObject);
     expect(encapsulatedData.permissions.length).toEqual(1);
     expect(encapsulatedData.permissions[0].role).toEqual({ owner: {} });
     expect(encapsulatedData.permissions[0].wallet).toEqual(payer.publicKey);
@@ -343,7 +345,7 @@ describe("one_cs", () => {
     console.log(`Payer balance before transaction: ${payerBalanceBefore} SOL`);
 
     await program.methods
-      .editData(label, new_data)
+      .editTextData(label, new_data)
       .accounts({
         payer: newKeypair.publicKey,
       })
@@ -354,7 +356,9 @@ describe("one_cs", () => {
       encapsulatePDA
     );
 
-    expect(encapsulatedData.data).toEqual(new_data);
+    let dataObject = { text: new_data, token: null };
+
+    expect(encapsulatedData.data).toEqual(dataObject);
 
     const newPublicKeyBalanceAfter = await context.banksClient.getBalance(
       newPublicKey
@@ -380,7 +384,7 @@ describe("one_cs", () => {
       .rpc({ commitment: "confirmed" });
 
     await program.methods
-      .editData(label, data)
+      .editTextData(label, data)
       .accounts({
         payer: newKeypair.publicKey,
       })
@@ -391,7 +395,9 @@ describe("one_cs", () => {
       encapsulatePDA
     );
 
-    expect(encapsulatedData.data).toEqual(data);
+    dataObject = { text: data, token: null };
+
+    expect(encapsulatedData.data).toEqual(dataObject);
 
     //will fail here
     // await program.methods
@@ -403,7 +409,7 @@ describe("one_cs", () => {
     //   .rpc({commitment: "confirmed"})
 
     //   await program.methods
-    //   .editData(label, data)
+    //   .editTextData(label, data)
     //   .accounts({
     //     payer: newKeypair.publicKey,
     //   })

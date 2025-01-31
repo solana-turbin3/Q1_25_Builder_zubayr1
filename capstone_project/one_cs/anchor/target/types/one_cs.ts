@@ -293,19 +293,19 @@ export type OneCs = {
       ]
     },
     {
-      "name": "editData",
+      "name": "editTextData",
       "docs": [
-        "Edit the encapsulated data"
+        "Edit the encapsulated text data"
       ],
       "discriminator": [
-        121,
-        33,
-        103,
-        228,
-        44,
-        194,
-        87,
-        176
+        157,
+        69,
+        231,
+        1,
+        177,
+        26,
+        172,
+        93
       ],
       "accounts": [
         {
@@ -395,19 +395,19 @@ export type OneCs = {
       ]
     },
     {
-      "name": "encapsulate",
+      "name": "encapsulateText",
       "docs": [
-        "Encapsulate the data and create a new permission data account"
+        "Encapsulate the text data and create a new permission data account"
       ],
       "discriminator": [
-        169,
-        85,
-        157,
-        64,
-        95,
-        156,
-        28,
-        101
+        29,
+        25,
+        38,
+        151,
+        203,
+        100,
+        139,
+        190
       ],
       "accounts": [
         {
@@ -845,6 +845,30 @@ export type OneCs = {
       }
     },
     {
+      "name": "encapsulatedData",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "text",
+            "type": {
+              "option": "string"
+            }
+          },
+          {
+            "name": "token",
+            "type": {
+              "option": {
+                "defined": {
+                  "name": "tokenData"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
       "name": "permission",
       "type": {
         "kind": "struct",
@@ -887,7 +911,11 @@ export type OneCs = {
           },
           {
             "name": "data",
-            "type": "string"
+            "type": {
+              "defined": {
+                "name": "encapsulatedData"
+              }
+            }
           },
           {
             "name": "permissions",
@@ -922,6 +950,22 @@ export type OneCs = {
           },
           {
             "name": "timeLimited"
+          }
+        ]
+      }
+    },
+    {
+      "name": "tokenData",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tokenMint",
+            "type": "pubkey"
+          },
+          {
+            "name": "tokenAmount",
+            "type": "u64"
           }
         ]
       }

@@ -287,19 +287,19 @@
       ]
     },
     {
-      "name": "edit_data",
+      "name": "edit_text_data",
       "docs": [
-        "Edit the encapsulated data"
+        "Edit the encapsulated text data"
       ],
       "discriminator": [
-        121,
-        33,
-        103,
-        228,
-        44,
-        194,
-        87,
-        176
+        157,
+        69,
+        231,
+        1,
+        177,
+        26,
+        172,
+        93
       ],
       "accounts": [
         {
@@ -389,19 +389,19 @@
       ]
     },
     {
-      "name": "encapsulate",
+      "name": "encapsulate_text",
       "docs": [
-        "Encapsulate the data and create a new permission data account"
+        "Encapsulate the text data and create a new permission data account"
       ],
       "discriminator": [
-        169,
-        85,
-        157,
-        64,
-        95,
-        156,
-        28,
-        101
+        29,
+        25,
+        38,
+        151,
+        203,
+        100,
+        139,
+        190
       ],
       "accounts": [
         {
@@ -839,6 +839,30 @@
       }
     },
     {
+      "name": "EncapsulatedData",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "text",
+            "type": {
+              "option": "string"
+            }
+          },
+          {
+            "name": "token",
+            "type": {
+              "option": {
+                "defined": {
+                  "name": "TokenData"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
       "name": "Permission",
       "type": {
         "kind": "struct",
@@ -881,7 +905,11 @@
           },
           {
             "name": "data",
-            "type": "string"
+            "type": {
+              "defined": {
+                "name": "EncapsulatedData"
+              }
+            }
           },
           {
             "name": "permissions",
@@ -916,6 +944,22 @@
           },
           {
             "name": "TimeLimited"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TokenData",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "token_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "token_amount",
+            "type": "u64"
           }
         ]
       }
