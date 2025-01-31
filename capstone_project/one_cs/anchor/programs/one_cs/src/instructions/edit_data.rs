@@ -4,7 +4,7 @@ use anchor_lang::prelude::*;
 
 #[derive(Accounts)]
 #[instruction(label: String)]
-pub struct EditData<'info> {
+pub struct EditTextData<'info> {
     #[account(mut)]
     pub payer: Signer<'info>,
 
@@ -21,8 +21,8 @@ pub struct EditData<'info> {
     pub system_program: Program<'info, System>,
 }
 
-impl<'info> EditData<'info> {
-    pub fn edit_data(&mut self, _label: String, data: String) -> Result<()> {
+impl<'info> EditTextData<'info> {
+    pub fn edit_text_data(&mut self, _label: String, data: String) -> Result<()> {
         let encapsulated_data = &mut self.encapsulated_data;
 
         if !encapsulated_data
@@ -46,7 +46,10 @@ impl<'info> EditData<'info> {
             }
         }
 
-        encapsulated_data.data = data;
+        encapsulated_data.data = EncapsulatedData {
+            text: Some(data),
+            token: None,
+        };
         Ok(())
     }
 }
