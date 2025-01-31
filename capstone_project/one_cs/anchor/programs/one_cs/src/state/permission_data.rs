@@ -18,12 +18,26 @@ pub struct Permission {
 
 #[account]
 #[derive(InitSpace)]
+pub struct TokenData {
+    pub token_mint: Pubkey,
+    pub token_amount: u64,
+}
+
+#[account]
+#[derive(InitSpace)]
+pub struct EncapsulatedData {
+    #[max_len(256)]
+    pub text: Option<String>, // Optional text data
+    pub token: Option<TokenData>, // Optional token data
+}
+
+#[account]
+#[derive(InitSpace)]
 pub struct PermissionData {
     pub owner: Pubkey,
     #[max_len(32)]
     pub label: String,
-    #[max_len(256)]
-    pub data: String,
+    pub data: EncapsulatedData,
     #[max_len(5, 100)]
     pub permissions: Vec<Permission>,
     pub bump: u8,
