@@ -50,3 +50,11 @@ pub struct DelegatedOwner {
     pub ownership_time: u64,
     pub bump: u8,
 }
+
+#[account]
+#[derive(InitSpace)]
+pub struct Escrow {
+    pub owner: Pubkey,
+    pub mint: Pubkey,
+    pub bump: u8,
+}
