@@ -73,4 +73,25 @@ pub mod one_cs {
 
         Ok(())
     }
+
+    /// Init escrow
+    pub fn init_escrow(ctx: Context<InitEscrow>, label: String) -> Result<()> {
+        ctx.accounts.init_escrow(label, &ctx.bumps)?;
+
+        Ok(())
+    }
+
+    /// Deposit tokens into the escrow
+    pub fn deposit_tokens(ctx: Context<DepositEscrow>, label: String, amount: u64) -> Result<()> {
+        ctx.accounts.deposit_tokens(label, amount)?;
+
+        Ok(())
+    }
+
+    /// Encapsulate a token
+    pub fn encapsulate_token(ctx: Context<EncapsulateToken>, label: String) -> Result<()> {
+        ctx.accounts.encapsulate_token(label, &ctx.bumps)?;
+
+        Ok(())
+    }
 }
