@@ -3,13 +3,22 @@ import { Program } from "@coral-xyz/anchor";
 import { Keypair, PublicKey } from "@solana/web3.js";
 import { BankrunProvider } from "anchor-bankrun";
 import { startAnchor, BanksClient, Clock } from "solana-bankrun";
+import {
+  createAssociatedTokenAccount,
+  createMint,
+  mintTo,
+  getAccount,
+} from "spl-token-bankrun";
+
 import { OneCs } from "../target/types/one_cs";
 import { SYSTEM_PROGRAM_ID } from "@coral-xyz/anchor/dist/cjs/native/system";
+import { getAssociatedTokenAddress, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 
 const IDL = require("../target/idl/one_cs.json");
 
 describe("one_cs", () => {
   const label = "test";
+  const tokenlabel = "token";
   const data = "data to be encapsulated";
   const new_data = "new data to be encapsulated";
 
@@ -17,7 +26,12 @@ describe("one_cs", () => {
   let provider: any;
   let program: any;
   let payer: Keypair;
+
   let encapsulatePDA: PublicKey;
+  let escrowPDA: PublicKey;
+  let encapsulateTokenPDA: PublicKey;
+  let ownerAta: PublicKey;
+
   let newKeypair: Keypair;
   let newPublicKey: PublicKey;
   let newKeypair2: Keypair;
@@ -25,7 +39,11 @@ describe("one_cs", () => {
   let newKeypair3: Keypair;
   let newPublicKey3: PublicKey;
 
+  let tokenMint: PublicKey;
+
   let banksClient: BanksClient;
+
+  const amount = 10_000 * 10 ** 9;
 
   beforeAll(async () => {
     newKeypair = new anchor.web3.Keypair();
@@ -78,11 +96,40 @@ describe("one_cs", () => {
 
     banksClient = context.banksClient;
 
+    // @ts-ignore
+    tokenMint = await createMint(banksClient, payer, payer.publicKey, null, 2);
+
+    ownerAta = await createAssociatedTokenAccount(
+      // @ts-ignore
+      banksClient,
+      payer,
+      tokenMint,
+      payer.publicKey
+    );
+
     [encapsulatePDA] = PublicKey.findProgramAddressSync(
       [
         Buffer.from("permissions"),
         program.programId.toBuffer(),
         Buffer.from(label),
+      ],
+      program.programId
+    );
+
+    [escrowPDA] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("escrow"),
+        program.programId.toBuffer(),
+        Buffer.from(tokenlabel),
+      ],
+      program.programId
+    );
+
+    [encapsulateTokenPDA] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("permissions"),
+        program.programId.toBuffer(),
+        Buffer.from(tokenlabel),
       ],
       program.programId
     );
@@ -127,8 +174,6 @@ describe("one_cs", () => {
     let encapsulatedData = await program.account.permissionData.fetch(
       encapsulatePDA
     );
-
-    console.log(encapsulatedData.permissions[0]);
 
     expect(encapsulatedData.permissions.length).toBe(2);
 
@@ -341,8 +386,8 @@ describe("one_cs", () => {
     const payerBalanceBefore = await context.banksClient.getBalance(
       payer.publicKey
     );
-    console.log(`Balance before transaction: ${newPublicKeyBalanceBefore} SOL`);
-    console.log(`Payer balance before transaction: ${payerBalanceBefore} SOL`);
+    // console.log(`Balance before transaction: ${newPublicKeyBalanceBefore} SOL`);
+    // console.log(`Payer balance before transaction: ${payerBalanceBefore} SOL`);
 
     await program.methods
       .editTextData(label, new_data)
@@ -366,8 +411,8 @@ describe("one_cs", () => {
     const payerBalanceAfter = await context.banksClient.getBalance(
       payer.publicKey
     );
-    console.log(`Balance after transaction: ${newPublicKeyBalanceAfter} SOL`);
-    console.log(`Payer balance after transaction: ${payerBalanceAfter} SOL`);
+    // console.log(`Balance after transaction: ${newPublicKeyBalanceAfter} SOL`);
+    // console.log(`Payer balance after transaction: ${payerBalanceAfter} SOL`);
 
     // update permission to time limited
     await program.methods
@@ -498,5 +543,102 @@ describe("one_cs", () => {
     expect(encapsulatedData.permissions[1].role).toEqual({ admin: {} });
     expect(encapsulatedData.permissions[2].role).toEqual({ owner: {} });
     expect(encapsulatedData.permissions[3].role).toEqual({ admin: {} });
+
+    // reset ownership for next tests
+    await program.methods
+      .transferOwnership(label, payer.publicKey, new anchor.BN(0))
+      .accounts({
+        owner: newPublicKey,
+      })
+      .signers([newKeypair])
+      .rpc({ commitment: "confirmed" });
+
+    encapsulatedData = await program.account.permissionData.fetch(
+      encapsulatePDA
+    );
+
+    expect(encapsulatedData.owner).toEqual(payer.publicKey);
+  });
+
+  it("init escrow", async () => {
+    await program.methods
+      .initEscrow(tokenlabel)
+      .accounts({
+        owner: payer.publicKey,
+        tokenMint: tokenMint,
+        tokenProgram: TOKEN_PROGRAM_ID,
+      })
+      .rpc({ commitment: "confirmed" });
+
+    const escrow = await program.account.escrow.fetch(escrowPDA);
+
+    expect(escrow.owner).toEqual(payer.publicKey);
+    expect(escrow.mint).toEqual(tokenMint);
+  });
+
+  it("deposit tokens", async () => {
+    await mintTo(
+      // @ts-ignore
+      banksClient,
+      payer,
+      tokenMint,
+      ownerAta,
+      payer.publicKey,
+      amount
+    );
+
+    const vaultAta = await anchor.utils.token.associatedAddress({
+      mint: tokenMint,
+      owner: escrowPDA,
+    });
+
+    await program.methods
+      .depositTokens(tokenlabel, new anchor.BN(amount))
+      .accounts({
+        owner: payer.publicKey,
+        tokenMint: tokenMint,
+        tokenProgram: TOKEN_PROGRAM_ID,
+      })
+      .rpc({ commitment: "confirmed" });
+
+    // @ts-ignore
+    const vaultAccount = await getAccount(banksClient, vaultAta);
+    expect(vaultAccount.amount).toEqual(BigInt(amount));
+  });
+
+  it("encapsulate token", async () => {
+    // Get the current vault amount first
+    const vaultAta = await anchor.utils.token.associatedAddress({
+      mint: tokenMint,
+      owner: escrowPDA,
+    });
+
+    // @ts-ignore
+    const vaultAccount = await getAccount(banksClient, vaultAta);
+    const currentAmount = vaultAccount.amount;
+
+    await program.methods
+      .encapsulateToken(tokenlabel)
+      .accounts({
+        owner: payer.publicKey,
+        tokenMint: tokenMint,
+        tokenProgram: TOKEN_PROGRAM_ID,
+      })
+      .rpc({ commitment: "confirmed" });
+
+    const encapsulatedData = await program.account.permissionData.fetch(
+      encapsulateTokenPDA
+    );
+
+    const receivedAmountStr =
+      encapsulatedData.data.token.tokenAmount.toString();
+
+    expect(encapsulatedData.data.token.tokenMint).toEqual(tokenMint);
+    expect(receivedAmountStr).toEqual(currentAmount.toString());
+    expect(encapsulatedData.owner).toEqual(payer.publicKey);
+    expect(encapsulatedData.label).toEqual(tokenlabel);
+    expect(encapsulatedData.permissions.length).toEqual(1);
+    expect(encapsulatedData.permissions[0].role).toEqual({ owner: {} });
+    expect(encapsulatedData.permissions[0].wallet).toEqual(payer.publicKey);
   });
 });
