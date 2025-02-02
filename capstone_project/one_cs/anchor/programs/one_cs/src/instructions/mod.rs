@@ -1,13 +1,17 @@
 pub mod accept_ownership;
 pub mod add_permission;
+pub mod deposit_escrow;
 pub mod edit_data;
 pub mod encapsulate;
+pub mod init_escrow;
 pub mod remove_permission;
 pub mod transfer_ownership;
 
 pub use accept_ownership::*;
 pub use add_permission::*;
+pub use deposit_escrow::*;
 pub use edit_data::*;
 pub use encapsulate::*;
+pub use init_escrow::*;
 pub use remove_permission::*;
 pub use transfer_ownership::*;
