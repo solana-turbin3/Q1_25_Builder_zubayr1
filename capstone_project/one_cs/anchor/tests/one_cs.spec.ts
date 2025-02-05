@@ -641,4 +641,74 @@ describe("one_cs", () => {
     expect(encapsulatedData.permissions[0].role).toEqual({ owner: {} });
     expect(encapsulatedData.permissions[0].wallet).toEqual(payer.publicKey);
   });
+
+  it("add permission to token", async () => {
+    await program.methods
+      .addPermission(
+        tokenlabel,
+        new anchor.BN(2),
+        new anchor.BN(0),
+        new anchor.BN(0)
+      )
+      .accounts({
+        payer: payer.publicKey,
+        permittedWallet: newPublicKey,
+      })
+      .rpc({ commitment: "confirmed" });
+
+    let encapsulatedData = await program.account.permissionData.fetch(
+      encapsulateTokenPDA
+    );
+
+    expect(encapsulatedData.permissions.length).toBe(2);
+
+    expect(encapsulatedData.permissions[0].role).toEqual({ owner: {} });
+    expect(encapsulatedData.permissions[0].wallet).toEqual(payer.publicKey);
+
+    expect(encapsulatedData.permissions[1].role).toEqual({ admin: {} });
+    expect(encapsulatedData.permissions[1].wallet).toEqual(newPublicKey);
+
+    await program.methods
+      .addPermission(
+        tokenlabel,
+        new anchor.BN(4),
+        new anchor.BN(1736449654),
+        new anchor.BN(1836449654)
+      )
+      .accounts({
+        payer: newPublicKey,
+        permittedWallet: newPublicKey2,
+      })
+      .signers([newKeypair])
+      .rpc({ commitment: "confirmed" });
+
+    encapsulatedData = await program.account.permissionData.fetch(
+      encapsulateTokenPDA
+    );
+
+    expect(encapsulatedData.permissions.length).toBe(3);
+
+    expect(encapsulatedData.permissions[2].role).toEqual({ timeLimited: {} });
+    expect(encapsulatedData.permissions[2].wallet).toEqual(newPublicKey2);
+    expect(encapsulatedData.permissions[2].startTime.toNumber()).toBe(
+      1736449654
+    );
+    expect(encapsulatedData.permissions[2].endTime.toNumber()).toBe(1836449654);
+  });
+
+  it("remove permission from token", async () => {
+    await program.methods
+      .removePermission(tokenlabel)
+      .accounts({
+        payer: payer.publicKey,
+        permittedWallet: newPublicKey2,
+      })
+      .rpc({ commitment: "confirmed" });
+
+    let encapsulatedData = await program.account.permissionData.fetch(
+      encapsulateTokenPDA
+    );
+
+    expect(encapsulatedData.permissions.length).toBe(2);
+  });
 });
