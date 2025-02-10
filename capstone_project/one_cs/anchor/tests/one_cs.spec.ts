@@ -30,7 +30,11 @@ describe("one_cs", () => {
   let encapsulatePDA: PublicKey;
   let escrowPDA: PublicKey;
   let encapsulateTokenPDA: PublicKey;
+
+  let vaultAta: PublicKey;
+  let payerAta: PublicKey;
   let ownerAta: PublicKey;
+  let takerAta: PublicKey;
 
   let newKeypair: Keypair;
   let newPublicKey: PublicKey;
@@ -44,6 +48,8 @@ describe("one_cs", () => {
   let banksClient: BanksClient;
 
   const amount = 10_000 * 10 ** 9;
+
+  const depositAmount = 10_000 * 10 ** 9;
 
   beforeAll(async () => {
     newKeypair = new anchor.web3.Keypair();
@@ -107,6 +113,22 @@ describe("one_cs", () => {
       payer.publicKey
     );
 
+    payerAta = await createAssociatedTokenAccount(
+      // @ts-ignore
+      banksClient,
+      payer,
+      tokenMint,
+      newKeypair.publicKey
+    );
+
+    takerAta = await createAssociatedTokenAccount(
+      // @ts-ignore
+      banksClient,
+      payer,
+      tokenMint,
+      newKeypair2.publicKey
+    );
+
     [encapsulatePDA] = PublicKey.findProgramAddressSync(
       [
         Buffer.from("permissions"),
@@ -132,6 +154,31 @@ describe("one_cs", () => {
         Buffer.from(tokenlabel),
       ],
       program.programId
+    );
+
+    vaultAta = await anchor.utils.token.associatedAddress({
+      mint: tokenMint,
+      owner: escrowPDA,
+    });
+
+    await mintTo(
+      // @ts-ignore
+      banksClient,
+      payer,
+      tokenMint,
+      ownerAta,
+      payer.publicKey,
+      amount
+    );
+
+    await mintTo(
+      // @ts-ignore
+      banksClient,
+      payer,
+      tokenMint,
+      payerAta,
+      payer.publicKey,
+      amount
     );
   });
 
@@ -573,25 +620,10 @@ describe("one_cs", () => {
     const escrow = await program.account.escrow.fetch(escrowPDA);
 
     expect(escrow.owner).toEqual(payer.publicKey);
-    expect(escrow.mint).toEqual(tokenMint);
+    expect(escrow.tokenMint).toEqual(tokenMint);
   });
 
   it("deposit tokens", async () => {
-    await mintTo(
-      // @ts-ignore
-      banksClient,
-      payer,
-      tokenMint,
-      ownerAta,
-      payer.publicKey,
-      amount
-    );
-
-    const vaultAta = await anchor.utils.token.associatedAddress({
-      mint: tokenMint,
-      owner: escrowPDA,
-    });
-
     await program.methods
       .depositTokens(tokenlabel, new anchor.BN(amount))
       .accounts({
@@ -710,5 +742,35 @@ describe("one_cs", () => {
     );
 
     expect(encapsulatedData.permissions.length).toBe(2);
+  });
+
+  it("edit token data: deposit", async () => {
+    await program.methods
+      .editTokenData(tokenlabel, new anchor.BN(depositAmount), true)
+      .accounts({
+        payer: newKeypair.publicKey,
+        taker: newKeypair2.publicKey,
+        owner: payer.publicKey,
+        tokenMint: tokenMint,
+        vault: vaultAta,
+        payerAta: payerAta,
+        takerAta: takerAta,
+        ownerAta: ownerAta,
+        tokenProgram: TOKEN_PROGRAM_ID,
+      })
+      .signers([newKeypair])
+      .rpc({ commitment: "confirmed" });
+
+    const encapsulatedData = await program.account.permissionData.fetch(
+      encapsulateTokenPDA
+    );
+
+    const expectedAmount = new anchor.BN(amount).add(
+      new anchor.BN(depositAmount)
+    );
+
+    expect(encapsulatedData.data.token.tokenAmount.toString()).toEqual(
+      expectedAmount.toString()
+    );
   });
 });
