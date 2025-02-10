@@ -94,4 +94,16 @@ pub mod one_cs {
 
         Ok(())
     }
+
+    /// Edit the encapsulated token data
+    pub fn edit_token_data(
+        ctx: Context<EditTokenData>,
+        label: String,
+        amount: u64,
+        is_deposit: bool,
+    ) -> Result<()> {
+        ctx.accounts.edit_token_data(label, amount, is_deposit)?;
+
+        Ok(())
+    }
 }
