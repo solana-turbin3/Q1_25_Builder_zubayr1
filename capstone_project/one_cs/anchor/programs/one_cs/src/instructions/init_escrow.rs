@@ -39,7 +39,7 @@ impl<'info> InitEscrow<'info> {
     pub fn init_escrow(&mut self, _label: String, bumps: &InitEscrowBumps) -> Result<()> {
         self.escrow.set_inner(Escrow {
             owner: self.owner.key(),
-            mint: self.token_mint.key(),
+            token_mint: self.token_mint.key(),
             bump: bumps.escrow,
         });
 
