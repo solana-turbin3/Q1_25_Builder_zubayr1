@@ -13,4 +13,7 @@ pub enum ErrorCode {
 
     #[msg("Time not reached")]
     TimeNotReached,
+
+    #[msg("Amount too large")]
+    AmountTooLarge,
 }
