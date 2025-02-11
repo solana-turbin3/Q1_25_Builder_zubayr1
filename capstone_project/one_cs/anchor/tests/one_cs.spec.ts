@@ -773,4 +773,62 @@ describe("one_cs", () => {
       expectedAmount.toString()
     );
   });
+
+  it("edit token data: withdraw", async () => {
+    await program.methods
+      .editTokenData(tokenlabel, new anchor.BN(depositAmount), false)
+      .accounts({
+        payer: newKeypair.publicKey,
+        taker: newKeypair2.publicKey,
+        owner: payer.publicKey,
+        tokenMint: tokenMint,
+        vault: vaultAta,
+        payerAta: payerAta,
+        takerAta: takerAta,
+        ownerAta: ownerAta,
+        tokenProgram: TOKEN_PROGRAM_ID,
+      })
+      .signers([newKeypair])
+      .rpc({ commitment: "confirmed" });
+
+    const encapsulatedData = await program.account.permissionData.fetch(
+      encapsulateTokenPDA
+    );
+
+    expect(encapsulatedData.data.token.tokenAmount.toString()).toEqual(
+      new anchor.BN(amount).toString()
+    );
+
+    // @ts-ignore
+    const vaultAccount = await getAccount(banksClient, vaultAta);
+    expect(vaultAccount.amount).toEqual(BigInt(amount));
+
+    // @ts-ignore
+    const takerAtaAccount = await getAccount(banksClient, takerAta);
+    expect(takerAtaAccount.amount).toEqual(BigInt(depositAmount));
+  });
+
+  it("edit token data: withdraw all", async () => {
+    await program.methods
+      .editTokenData(tokenlabel, new anchor.BN(amount), false)
+      .accounts({
+        payer: newKeypair.publicKey,
+        taker: newKeypair2.publicKey,
+        owner: payer.publicKey,
+        tokenMint: tokenMint,
+        vault: vaultAta,
+        payerAta: payerAta,
+        takerAta: takerAta,
+        ownerAta: ownerAta,
+        tokenProgram: TOKEN_PROGRAM_ID,
+      })
+      .signers([newKeypair])
+      .rpc({ commitment: "confirmed" });
+
+    const encapsulatedData = await program.account.permissionData.fetch(
+      encapsulateTokenPDA
+    );
+
+    expect(encapsulatedData.data.token).toEqual(null);
+  });
 });
