@@ -1,3 +1,4 @@
+use crate::error_state::ErrorCode;
 use crate::state::*;
 use anchor_lang::prelude::*;
 
@@ -42,6 +43,11 @@ impl<'info> TransferOwnership<'info> {
         // Check if instant delegation or future delegation
         let current_time = Clock::get().unwrap().unix_timestamp as u64;
         if ownership_time < current_time {
+            // Check if owner is the current owner
+            if encapsulated_data.owner != self.owner.key() {
+                return Err(ErrorCode::NotOwner.into());
+            }
+
             let old_owner = encapsulated_data.owner;
             encapsulated_data.owner = new_owner;
 
