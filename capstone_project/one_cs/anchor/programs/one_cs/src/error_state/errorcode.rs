@@ -16,4 +16,7 @@ pub enum ErrorCode {
 
     #[msg("Amount too large")]
     AmountTooLarge,
+
+    #[msg("Not owner")]
+    NotOwner,
 }
