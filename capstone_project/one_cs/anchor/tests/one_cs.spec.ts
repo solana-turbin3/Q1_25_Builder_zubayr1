@@ -544,6 +544,14 @@ describe("one_cs", () => {
     expect(encapsulatedData.permissions[1].role).toEqual({ admin: {} });
     expect(encapsulatedData.permissions[2].role).toEqual({ admin: {} });
     expect(encapsulatedData.permissions[3].role).toEqual({ owner: {} });
+
+    // will fail here
+    // await program.methods
+    //   .transferOwnership(label, newPublicKey, new anchor.BN(0))
+    //   .accounts({
+    //     owner: payer.publicKey,
+    //   })
+    //   .rpc({ commitment: "confirmed" });
   });
 
   it("accept ownership", async () => {

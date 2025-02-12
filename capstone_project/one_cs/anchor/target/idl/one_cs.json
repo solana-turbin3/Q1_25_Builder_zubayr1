@@ -2206,6 +2206,11 @@
       "code": 6004,
       "name": "AmountTooLarge",
       "msg": "Amount too large"
+    },
+    {
+      "code": 6005,
+      "name": "NotOwner",
+      "msg": "Not owner"
     }
   ],
   "types": [

@@ -2212,6 +2212,11 @@ export type OneCs = {
       "code": 6004,
       "name": "amountTooLarge",
       "msg": "Amount too large"
+    },
+    {
+      "code": 6005,
+      "name": "notOwner",
+      "msg": "Not owner"
     }
   ],
   "types": [
