@@ -34,6 +34,7 @@ pub struct EncapsulatedData {
 #[account]
 #[derive(InitSpace)]
 pub struct PermissionData {
+    pub creator: Pubkey,
     pub owner: Pubkey,
     #[max_len(32)]
     pub label: String,
@@ -54,7 +55,7 @@ pub struct DelegatedOwner {
 #[account]
 #[derive(InitSpace)]
 pub struct Escrow {
-    pub owner: Pubkey,
+    pub creator: Pubkey,
     pub token_mint: Pubkey,
     pub bump: u8,
 }
