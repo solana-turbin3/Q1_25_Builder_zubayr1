@@ -1,5 +1,6 @@
 pub mod accept_ownership;
 pub mod add_permission;
+pub mod close_escrow_manually;
 pub mod deposit_escrow;
 pub mod edit_data;
 pub mod encapsulate;
@@ -9,6 +10,7 @@ pub mod transfer_ownership;
 
 pub use accept_ownership::*;
 pub use add_permission::*;
+pub use close_escrow_manually::*;
 pub use deposit_escrow::*;
 pub use edit_data::*;
 pub use encapsulate::*;

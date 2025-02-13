@@ -9,13 +9,13 @@ use anchor_spl::token_interface::{
 #[instruction(label: String)]
 pub struct EncapsulateText<'info> {
     #[account(mut)]
-    pub owner: Signer<'info>,
+    pub creator: Signer<'info>,
 
     #[account(
       init,
-      payer = owner,
+      payer = creator,
       space = 8 + PermissionData::INIT_SPACE,
-      seeds = [b"permissions".as_ref(), crate::ID.as_ref(), label.as_ref()],
+      seeds = [b"permissions".as_ref(), creator.key().as_ref(), label.as_ref()],
       bump
     )]
     pub encapsulated_data: Account<'info, PermissionData>,
@@ -31,7 +31,8 @@ impl<'info> EncapsulateText<'info> {
         data: String,
     ) -> Result<()> {
         self.encapsulated_data.set_inner(PermissionData {
-            owner: self.owner.key(),
+            creator: self.creator.key(),
+            owner: self.creator.key(),
             label,
             data: EncapsulatedData {
                 text: Some(data),
@@ -39,7 +40,7 @@ impl<'info> EncapsulateText<'info> {
             },
             permissions: vec![Permission {
                 role: Role::Owner,
-                wallet: self.owner.key(),
+                wallet: self.creator.key(),
                 start_time: 0,
                 end_time: 0,
             }],
@@ -54,21 +55,21 @@ impl<'info> EncapsulateText<'info> {
 #[instruction(label: String)]
 pub struct EncapsulateToken<'info> {
     #[account(mut)]
-    pub owner: Signer<'info>,
+    pub creator: Signer<'info>,
 
     #[account(mut)]
     pub token_mint: InterfaceAccount<'info, Mint>,
 
     #[account(
       init_if_needed,
-      payer = owner,
+      payer = creator,
       associated_token::mint = token_mint,
-      associated_token::authority = owner,
+      associated_token::authority = creator,
     )]
-    pub owner_ata: InterfaceAccount<'info, TokenAccount>,
+    pub creator_ata: InterfaceAccount<'info, TokenAccount>,
 
     #[account(
-      seeds = [b"escrow", crate::ID.as_ref(), label.as_ref()],
+      seeds = [b"escrow", creator.key().as_ref(), label.as_ref()],
       bump = escrow.bump
     )]
     pub escrow: Account<'info, Escrow>,
@@ -81,9 +82,9 @@ pub struct EncapsulateToken<'info> {
 
     #[account(
       init,
-      payer = owner,
+      payer = creator,
       space = 8 + PermissionData::INIT_SPACE,
-      seeds = [b"permissions".as_ref(), crate::ID.as_ref(), label.as_ref()],
+      seeds = [b"permissions", creator.key().as_ref(), label.as_ref()],
       bump
     )]
     pub encapsulated_data: Account<'info, PermissionData>,
@@ -102,7 +103,8 @@ impl<'info> EncapsulateToken<'info> {
         let vault_amount = self.vault.amount;
 
         self.encapsulated_data.set_inner(PermissionData {
-            owner: self.owner.key(),
+            creator: self.creator.key(),
+            owner: self.creator.key(),
             label,
             data: EncapsulatedData {
                 text: None,
@@ -114,7 +116,7 @@ impl<'info> EncapsulateToken<'info> {
 
             permissions: vec![Permission {
                 role: Role::Owner,
-                wallet: self.owner.key(),
+                wallet: self.creator.key(),
                 start_time: 0,
                 end_time: 0,
             }],

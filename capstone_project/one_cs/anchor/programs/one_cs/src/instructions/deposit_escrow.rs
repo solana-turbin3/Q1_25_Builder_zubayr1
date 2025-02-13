@@ -9,22 +9,22 @@ use anchor_spl::token_interface::{
 #[instruction(label: String)]
 pub struct DepositEscrow<'info> {
     #[account(mut)]
-    pub owner: Signer<'info>,
+    pub creator: Signer<'info>,
 
     #[account(mut)]
     pub token_mint: InterfaceAccount<'info, Mint>,
 
     #[account(
       init_if_needed,
-      payer = owner,
+      payer = creator,
       associated_token::mint = token_mint,
-      associated_token::authority = owner,
+      associated_token::authority = creator,
     )]
-    pub owner_ata: InterfaceAccount<'info, TokenAccount>,
+    pub creator_ata: InterfaceAccount<'info, TokenAccount>,
 
     #[account(
       mut,
-      seeds = [b"escrow", crate::ID.as_ref(), label.as_ref()],
+      seeds = [b"escrow", creator.key().as_ref(), label.as_ref()],
       bump = escrow.bump
     )]
     pub escrow: Account<'info, Escrow>,
@@ -46,10 +46,10 @@ impl<'info> DepositEscrow<'info> {
         let cpi_program = self.token_program.to_account_info();
 
         let cpi_accounts = TransferChecked {
-            from: self.owner_ata.to_account_info(),
+            from: self.creator_ata.to_account_info(),
             to: self.vault.to_account_info(),
             mint: self.token_mint.to_account_info(),
-            authority: self.owner.to_account_info(),
+            authority: self.creator.to_account_info(),
         };
 
         let cpi_ctx = CpiContext::new(cpi_program, cpi_accounts);

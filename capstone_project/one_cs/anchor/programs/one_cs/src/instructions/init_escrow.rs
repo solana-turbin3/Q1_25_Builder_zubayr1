@@ -9,22 +9,22 @@ use anchor_spl::token_interface::{
 #[instruction(label: String)]
 pub struct InitEscrow<'info> {
     #[account(mut)]
-    pub owner: Signer<'info>,
+    pub creator: SystemAccount<'info>,
 
     pub token_mint: InterfaceAccount<'info, Mint>,
 
     #[account(
         init,
-        payer = owner,
+        payer = creator,
         space = 8 + Escrow::INIT_SPACE,
-        seeds = [b"escrow", crate::ID.as_ref(), label.as_ref()],
+        seeds = [b"escrow", creator.key().as_ref(), label.as_ref()],
         bump
       )]
     pub escrow: Account<'info, Escrow>,
 
     #[account(
         init,
-        payer = owner,
+        payer = creator,
         associated_token::mint = token_mint,
         associated_token::authority = escrow,
       )]
@@ -38,7 +38,7 @@ pub struct InitEscrow<'info> {
 impl<'info> InitEscrow<'info> {
     pub fn init_escrow(&mut self, _label: String, bumps: &InitEscrowBumps) -> Result<()> {
         self.escrow.set_inner(Escrow {
-            owner: self.owner.key(),
+            creator: self.creator.key(),
             token_mint: self.token_mint.key(),
             bump: bumps.escrow,
         });

@@ -13,9 +13,11 @@ pub struct EditTextData<'info> {
     #[account(mut)]
     pub payer: Signer<'info>,
 
+    pub creator: SystemAccount<'info>,
+
     #[account(
       mut,
-      seeds = [b"permissions", crate::ID.as_ref(), label.as_ref()],
+      seeds = [b"permissions", creator.key().as_ref(), label.as_ref()],
       bump = encapsulated_data.bump,
       realloc = 8 + PermissionData::INIT_SPACE,
       realloc::payer = payer,
@@ -65,6 +67,8 @@ pub struct EditTokenData<'info> {
     #[account(mut)]
     pub payer: Signer<'info>,
 
+    pub creator: SystemAccount<'info>,
+
     pub taker: SystemAccount<'info>,
 
     pub owner: SystemAccount<'info>,
@@ -74,7 +78,7 @@ pub struct EditTokenData<'info> {
     #[account(
         mut,
         has_one = token_mint,
-        seeds = [b"escrow", crate::ID.as_ref(), label.as_ref()],
+        seeds = [b"escrow", creator.key().as_ref(), label.as_ref()],
         bump = escrow.bump
       )]
     pub escrow: Account<'info, Escrow>,
@@ -109,7 +113,7 @@ pub struct EditTokenData<'info> {
 
     #[account(
         mut,
-        seeds = [b"permissions", crate::ID.as_ref(), label.as_ref()],
+        seeds = [b"permissions", creator.key().as_ref(), label.as_ref()],
         bump = encapsulated_data.bump,
         realloc = 8 + PermissionData::INIT_SPACE,
         realloc::payer = payer,
@@ -205,7 +209,7 @@ impl<'info> EditTokenData<'info> {
 
         let seeds = &[
             b"escrow",
-            crate::ID.as_ref(),
+            self.creator.key.as_ref(),
             label.as_ref(),
             &[self.escrow.bump],
         ];
@@ -237,7 +241,7 @@ impl<'info> EditTokenData<'info> {
         Ok(())
     }
 
-    pub fn close_escrow(&mut self, label: String) -> Result<()> {
+    fn close_escrow(&mut self, label: String) -> Result<()> {
         let cpi_program = self.token_program.to_account_info();
 
         let cpi_accounts = CloseAccount {
@@ -248,7 +252,7 @@ impl<'info> EditTokenData<'info> {
 
         let seeds = &[
             b"escrow",
-            crate::ID.as_ref(),
+            self.creator.key.as_ref(),
             label.as_ref(),
             &[self.escrow.bump],
         ];

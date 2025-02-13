@@ -8,9 +8,11 @@ pub struct TransferOwnership<'info> {
     #[account(mut)]
     pub owner: Signer<'info>,
 
+    pub creator: SystemAccount<'info>,
+
     #[account(
       mut,
-      seeds = [b"permissions", crate::ID.as_ref(), label.as_ref()],
+      seeds = [b"permissions", creator.key().as_ref(), label.as_ref()],
       bump = encapsulated_data.bump,
       realloc = 8 + PermissionData::INIT_SPACE,
       realloc::payer = owner,
@@ -22,7 +24,7 @@ pub struct TransferOwnership<'info> {
       init_if_needed,
       payer = owner,
       space = 8 + DelegatedOwner::INIT_SPACE,
-      seeds = [b"delegated_owner", crate::ID.as_ref(), label.as_ref()],
+      seeds = [b"delegated_owner", creator.key().as_ref(), label.as_ref()],
       bump
     )]
     pub delegated_owner: Account<'info, DelegatedOwner>,
