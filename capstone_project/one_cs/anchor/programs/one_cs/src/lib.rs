@@ -106,4 +106,11 @@ pub mod one_cs {
 
         Ok(())
     }
+
+    /// Close the escrow manually
+    pub fn close_escrow_manually(ctx: Context<CloseEscrowManually>, label: String) -> Result<()> {
+        ctx.accounts.close_escrow_manually(label)?;
+
+        Ok(())
+    }
 }
