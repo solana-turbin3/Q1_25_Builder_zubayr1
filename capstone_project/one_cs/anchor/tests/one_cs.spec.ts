@@ -132,7 +132,7 @@ describe("one_cs", () => {
     [encapsulatePDA] = PublicKey.findProgramAddressSync(
       [
         Buffer.from("permissions"),
-        program.programId.toBuffer(),
+        payer.publicKey.toBuffer(),
         Buffer.from(label),
       ],
       program.programId
@@ -141,7 +141,7 @@ describe("one_cs", () => {
     [escrowPDA] = PublicKey.findProgramAddressSync(
       [
         Buffer.from("escrow"),
-        program.programId.toBuffer(),
+        payer.publicKey.toBuffer(),
         Buffer.from(tokenlabel),
       ],
       program.programId
@@ -150,7 +150,7 @@ describe("one_cs", () => {
     [encapsulateTokenPDA] = PublicKey.findProgramAddressSync(
       [
         Buffer.from("permissions"),
-        program.programId.toBuffer(),
+        payer.publicKey.toBuffer(),
         Buffer.from(tokenlabel),
       ],
       program.programId
@@ -168,7 +168,7 @@ describe("one_cs", () => {
       tokenMint,
       ownerAta,
       payer.publicKey,
-      amount
+      2 * amount
     );
 
     await mintTo(
@@ -178,7 +178,7 @@ describe("one_cs", () => {
       tokenMint,
       payerAta,
       payer.publicKey,
-      amount
+      2 * amount
     );
   });
 
@@ -188,7 +188,7 @@ describe("one_cs", () => {
     await program.methods
       .encapsulateText(label, data)
       .accounts({
-        owner: payer.publicKey,
+        creator: payer.publicKey,
       })
       .rpc({ commitment: "confirmed" });
 
@@ -196,6 +196,7 @@ describe("one_cs", () => {
       encapsulatePDA
     );
 
+    expect(encapsulatedData.creator).toEqual(payer.publicKey);
     expect(encapsulatedData.owner).toEqual(payer.publicKey);
     expect(encapsulatedData.label).toEqual(label);
     expect(encapsulatedData.data).toEqual(dataObject);
@@ -214,6 +215,7 @@ describe("one_cs", () => {
       )
       .accounts({
         payer: payer.publicKey,
+        creator: payer.publicKey,
         permittedWallet: newPublicKey,
       })
       .rpc({ commitment: "confirmed" });
@@ -247,6 +249,7 @@ describe("one_cs", () => {
       )
       .accounts({
         payer: newPublicKey,
+        creator: payer.publicKey,
         permittedWallet: newPublicKey2,
       })
       .signers([newKeypair])
@@ -273,6 +276,7 @@ describe("one_cs", () => {
       )
       .accounts({
         payer: payer.publicKey,
+        creator: payer.publicKey,
         permittedWallet: newPublicKey,
       })
       .rpc({ commitment: "confirmed" });
@@ -297,6 +301,7 @@ describe("one_cs", () => {
       )
       .accounts({
         payer: payer.publicKey,
+        creator: payer.publicKey,
         permittedWallet: newPublicKey2,
       })
       .rpc({ commitment: "confirmed" });
@@ -320,6 +325,7 @@ describe("one_cs", () => {
       .removePermission(label)
       .accounts({
         payer: payer.publicKey,
+        creator: payer.publicKey,
         permittedWallet: newPublicKey,
       })
       .rpc({ commitment: "confirmed" });
@@ -356,6 +362,7 @@ describe("one_cs", () => {
       )
       .accounts({
         payer: payer.publicKey,
+        creator: payer.publicKey,
         permittedWallet: newPublicKey2,
       })
       .rpc({ commitment: "confirmed" });
@@ -369,6 +376,7 @@ describe("one_cs", () => {
       )
       .accounts({
         payer: newPublicKey2,
+        creator: payer.publicKey,
         permittedWallet: newPublicKey,
       })
       .signers([newKeypair2])
@@ -410,6 +418,7 @@ describe("one_cs", () => {
       )
       .accounts({
         payer: newPublicKey2,
+        creator: payer.publicKey,
         permittedWallet: newPublicKey,
       })
       .signers([newKeypair2])
@@ -420,6 +429,7 @@ describe("one_cs", () => {
     //   .removePermission(label)
     //   .accounts({
     //     payer: newPublicKey2,
+    //     creator: payer.publicKey,
     //     permittedWallet: newPublicKey,
     //   })
     //   .signers([newKeypair2])
@@ -440,6 +450,7 @@ describe("one_cs", () => {
       .editTextData(label, new_data)
       .accounts({
         payer: newKeypair.publicKey,
+        creator: payer.publicKey,
       })
       .signers([newKeypair])
       .rpc({ commitment: "confirmed" });
@@ -471,6 +482,7 @@ describe("one_cs", () => {
       )
       .accounts({
         payer: payer.publicKey,
+        creator: payer.publicKey,
         permittedWallet: newPublicKey,
       })
       .rpc({ commitment: "confirmed" });
@@ -479,6 +491,7 @@ describe("one_cs", () => {
       .editTextData(label, data)
       .accounts({
         payer: newKeypair.publicKey,
+        creator: payer.publicKey,
       })
       .signers([newKeypair])
       .rpc({ commitment: "confirmed" });
@@ -496,6 +509,7 @@ describe("one_cs", () => {
     //   .addPermission(label, new anchor.BN(4), new anchor.BN(0), new anchor.BN(0))
     //   .accounts({
     //     payer: payer.publicKey,
+    //     creator: payer.publicKey,
     //     permittedWallet: newPublicKey,
     //   })
     //   .rpc({commitment: "confirmed"})
@@ -504,6 +518,7 @@ describe("one_cs", () => {
     //   .editTextData(label, data)
     //   .accounts({
     //     payer: newKeypair.publicKey,
+    //     creator: payer.publicKey,
     //   })
     //   .signers([newKeypair])
     //   .rpc({commitment: "confirmed"})
@@ -514,6 +529,7 @@ describe("one_cs", () => {
       .transferOwnership(label, newPublicKey, new anchor.BN(0))
       .accounts({
         owner: payer.publicKey,
+        creator: payer.publicKey,
       })
       .rpc({ commitment: "confirmed" });
 
@@ -531,6 +547,7 @@ describe("one_cs", () => {
       .transferOwnership(label, newPublicKey3, new anchor.BN(1111))
       .accounts({
         owner: newPublicKey,
+        creator: payer.publicKey,
       })
       .signers([newKeypair])
       .rpc({ commitment: "confirmed" });
@@ -550,6 +567,7 @@ describe("one_cs", () => {
     //   .transferOwnership(label, newPublicKey, new anchor.BN(0))
     //   .accounts({
     //     owner: payer.publicKey,
+    //     creator: payer.publicKey,
     //   })
     //   .rpc({ commitment: "confirmed" });
   });
@@ -566,6 +584,7 @@ describe("one_cs", () => {
       )
       .accounts({
         owner: newPublicKey3,
+        creator: payer.publicKey,
       })
       .signers([newKeypair3])
       .rpc({ commitment: "confirmed" });
@@ -585,6 +604,7 @@ describe("one_cs", () => {
       .acceptOwnership(label)
       .accounts({
         signer: newPublicKey,
+        creator: payer.publicKey,
       })
       .signers([newKeypair])
       .rpc({ commitment: "confirmed" });
@@ -604,6 +624,7 @@ describe("one_cs", () => {
       .transferOwnership(label, payer.publicKey, new anchor.BN(0))
       .accounts({
         owner: newPublicKey,
+        creator: payer.publicKey,
       })
       .signers([newKeypair])
       .rpc({ commitment: "confirmed" });
@@ -613,13 +634,14 @@ describe("one_cs", () => {
     );
 
     expect(encapsulatedData.owner).toEqual(payer.publicKey);
+    expect(encapsulatedData.creator).toEqual(payer.publicKey);
   });
 
   it("init escrow", async () => {
     await program.methods
       .initEscrow(tokenlabel)
       .accounts({
-        owner: payer.publicKey,
+        creator: payer.publicKey,
         tokenMint: tokenMint,
         tokenProgram: TOKEN_PROGRAM_ID,
       })
@@ -627,7 +649,7 @@ describe("one_cs", () => {
 
     const escrow = await program.account.escrow.fetch(escrowPDA);
 
-    expect(escrow.owner).toEqual(payer.publicKey);
+    expect(escrow.creator).toEqual(payer.publicKey);
     expect(escrow.tokenMint).toEqual(tokenMint);
   });
 
@@ -635,7 +657,7 @@ describe("one_cs", () => {
     await program.methods
       .depositTokens(tokenlabel, new anchor.BN(amount))
       .accounts({
-        owner: payer.publicKey,
+        creator: payer.publicKey,
         tokenMint: tokenMint,
         tokenProgram: TOKEN_PROGRAM_ID,
       })
@@ -660,7 +682,7 @@ describe("one_cs", () => {
     await program.methods
       .encapsulateToken(tokenlabel)
       .accounts({
-        owner: payer.publicKey,
+        creator: payer.publicKey,
         tokenMint: tokenMint,
         tokenProgram: TOKEN_PROGRAM_ID,
       })
@@ -676,6 +698,7 @@ describe("one_cs", () => {
     expect(encapsulatedData.data.token.tokenMint).toEqual(tokenMint);
     expect(receivedAmountStr).toEqual(currentAmount.toString());
     expect(encapsulatedData.owner).toEqual(payer.publicKey);
+    expect(encapsulatedData.creator).toEqual(payer.publicKey);
     expect(encapsulatedData.label).toEqual(tokenlabel);
     expect(encapsulatedData.permissions.length).toEqual(1);
     expect(encapsulatedData.permissions[0].role).toEqual({ owner: {} });
@@ -692,6 +715,7 @@ describe("one_cs", () => {
       )
       .accounts({
         payer: payer.publicKey,
+        creator: payer.publicKey,
         permittedWallet: newPublicKey,
       })
       .rpc({ commitment: "confirmed" });
@@ -717,6 +741,7 @@ describe("one_cs", () => {
       )
       .accounts({
         payer: newPublicKey,
+        creator: payer.publicKey,
         permittedWallet: newPublicKey2,
       })
       .signers([newKeypair])
@@ -741,6 +766,7 @@ describe("one_cs", () => {
       .removePermission(tokenlabel)
       .accounts({
         payer: payer.publicKey,
+        creator: payer.publicKey,
         permittedWallet: newPublicKey2,
       })
       .rpc({ commitment: "confirmed" });
@@ -756,6 +782,7 @@ describe("one_cs", () => {
     await program.methods
       .editTokenData(tokenlabel, new anchor.BN(depositAmount), true)
       .accounts({
+        creator: payer.publicKey,
         payer: newKeypair.publicKey,
         taker: newKeypair2.publicKey,
         owner: payer.publicKey,
@@ -786,6 +813,7 @@ describe("one_cs", () => {
     await program.methods
       .editTokenData(tokenlabel, new anchor.BN(depositAmount), false)
       .accounts({
+        creator: payer.publicKey,
         payer: newKeypair.publicKey,
         taker: newKeypair2.publicKey,
         owner: payer.publicKey,
@@ -820,6 +848,7 @@ describe("one_cs", () => {
     await program.methods
       .editTokenData(tokenlabel, new anchor.BN(amount), false)
       .accounts({
+        creator: payer.publicKey,
         payer: newKeypair.publicKey,
         taker: newKeypair2.publicKey,
         owner: payer.publicKey,
@@ -832,11 +861,102 @@ describe("one_cs", () => {
       })
       .signers([newKeypair])
       .rpc({ commitment: "confirmed" });
-
     const encapsulatedData = await program.account.permissionData.fetch(
       encapsulateTokenPDA
     );
-
     expect(encapsulatedData.data.token).toEqual(null);
+  });
+
+  it("close escrow manually", async () => {
+    // again init escrow, deposit & encapsulate token
+    const newtokenlabel = "newtokenlabel";
+    await program.methods
+      .initEscrow(newtokenlabel)
+      .accounts({
+        creator: payer.publicKey,
+        tokenMint: tokenMint,
+        tokenProgram: TOKEN_PROGRAM_ID,
+      })
+      .rpc({ commitment: "confirmed" });
+
+    const [newEscrowPDA] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("escrow"),
+        payer.publicKey.toBuffer(),
+        Buffer.from(newtokenlabel),
+      ],
+      program.programId
+    );
+
+    const newEscrow = await program.account.escrow.fetch(newEscrowPDA);
+
+    expect(newEscrow.creator).toEqual(payer.publicKey);
+    expect(newEscrow.tokenMint).toEqual(tokenMint);
+
+    await program.methods
+      .depositTokens(newtokenlabel, new anchor.BN(amount))
+      .accounts({
+        creator: payer.publicKey,
+        tokenMint: tokenMint,
+        tokenProgram: TOKEN_PROGRAM_ID,
+      })
+      .rpc({ commitment: "confirmed" });
+
+    await program.methods
+      .encapsulateToken(newtokenlabel)
+      .accounts({
+        creator: payer.publicKey,
+        tokenMint: tokenMint,
+        tokenProgram: TOKEN_PROGRAM_ID,
+      })
+      .rpc({ commitment: "confirmed" });
+
+    const [newEncapsulateTokenPDA] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("permissions"),
+        payer.publicKey.toBuffer(),
+        Buffer.from(newtokenlabel),
+      ],
+      program.programId
+    );
+
+    let newEncapsulatedData = await program.account.permissionData.fetch(
+      newEncapsulateTokenPDA
+    );
+
+    const receivedAmountStr =
+      newEncapsulatedData.data.token.tokenAmount.toString();
+
+    expect(newEncapsulatedData.data.token.tokenMint).toEqual(tokenMint);
+    expect(receivedAmountStr).toEqual(amount.toString());
+
+    // @ts-ignore
+    let payerAtaAccount = await getAccount(banksClient, ownerAta);
+    expect(payerAtaAccount.amount).toEqual(BigInt(0));
+
+    const newVaultAta = await anchor.utils.token.associatedAddress({
+      mint: tokenMint,
+      owner: newEscrowPDA,
+    });
+
+    await program.methods
+      .closeEscrowManually(newtokenlabel)
+      .accounts({
+        payer: payer.publicKey,
+        creator: payer.publicKey,
+        tokenMint: tokenMint,
+        vault: newVaultAta,
+        payerAta: ownerAta,
+        tokenProgram: TOKEN_PROGRAM_ID,
+      })
+      .rpc({ commitment: "confirmed" });
+
+    newEncapsulatedData = await program.account.permissionData.fetch(
+      newEncapsulateTokenPDA
+    );
+    expect(newEncapsulatedData.data.token).toEqual(null);
+    // @ts-ignore
+    payerAtaAccount = await getAccount(banksClient, ownerAta);
+    expect(payerAtaAccount.amount).toEqual(BigInt(amount));
   });
 });

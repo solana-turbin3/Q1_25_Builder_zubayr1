@@ -35,6 +35,9 @@ export type OneCs = {
           "signer": true
         },
         {
+          "name": "creator"
+        },
+        {
           "name": "encapsulatedData",
           "writable": true,
           "pda": {
@@ -56,41 +59,8 @@ export type OneCs = {
                 ]
               },
               {
-                "kind": "const",
-                "value": [
-                  9,
-                  43,
-                  225,
-                  230,
-                  237,
-                  13,
-                  216,
-                  237,
-                  44,
-                  121,
-                  170,
-                  202,
-                  171,
-                  13,
-                  123,
-                  122,
-                  17,
-                  76,
-                  28,
-                  165,
-                  22,
-                  109,
-                  84,
-                  97,
-                  252,
-                  22,
-                  20,
-                  59,
-                  1,
-                  116,
-                  88,
-                  174
-                ]
+                "kind": "account",
+                "path": "creator"
               },
               {
                 "kind": "arg",
@@ -124,41 +94,8 @@ export type OneCs = {
                 ]
               },
               {
-                "kind": "const",
-                "value": [
-                  9,
-                  43,
-                  225,
-                  230,
-                  237,
-                  13,
-                  216,
-                  237,
-                  44,
-                  121,
-                  170,
-                  202,
-                  171,
-                  13,
-                  123,
-                  122,
-                  17,
-                  76,
-                  28,
-                  165,
-                  22,
-                  109,
-                  84,
-                  97,
-                  252,
-                  22,
-                  20,
-                  59,
-                  1,
-                  116,
-                  88,
-                  174
-                ]
+                "kind": "account",
+                "path": "creator"
               },
               {
                 "kind": "arg",
@@ -201,6 +138,9 @@ export type OneCs = {
           "signer": true
         },
         {
+          "name": "creator"
+        },
+        {
           "name": "encapsulatedData",
           "writable": true,
           "pda": {
@@ -222,41 +162,8 @@ export type OneCs = {
                 ]
               },
               {
-                "kind": "const",
-                "value": [
-                  9,
-                  43,
-                  225,
-                  230,
-                  237,
-                  13,
-                  216,
-                  237,
-                  44,
-                  121,
-                  170,
-                  202,
-                  171,
-                  13,
-                  123,
-                  122,
-                  17,
-                  76,
-                  28,
-                  165,
-                  22,
-                  109,
-                  84,
-                  97,
-                  252,
-                  22,
-                  20,
-                  59,
-                  1,
-                  116,
-                  88,
-                  174
-                ]
+                "kind": "account",
+                "path": "creator"
               },
               {
                 "kind": "arg",
@@ -293,6 +200,294 @@ export type OneCs = {
       ]
     },
     {
+      "name": "closeEscrowManually",
+      "docs": [
+        "Close the escrow manually"
+      ],
+      "discriminator": [
+        36,
+        79,
+        152,
+        230,
+        201,
+        235,
+        200,
+        40
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "creator"
+        },
+        {
+          "name": "tokenMint",
+          "relations": [
+            "escrow"
+          ]
+        },
+        {
+          "name": "escrow",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "creator"
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "escrow"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "tokenMint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "payerAta",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "payer"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "tokenMint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "encapsulatedData",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  115
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "creator"
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "tokenProgram"
+        },
+        {
+          "name": "associatedTokenProgram",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        }
+      ],
+      "args": [
+        {
+          "name": "label",
+          "type": "string"
+        }
+      ]
+    },
+    {
       "name": "depositTokens",
       "docs": [
         "Deposit tokens into the escrow"
@@ -309,7 +504,7 @@ export type OneCs = {
       ],
       "accounts": [
         {
-          "name": "owner",
+          "name": "creator",
           "writable": true,
           "signer": true
         },
@@ -318,13 +513,13 @@ export type OneCs = {
           "writable": true
         },
         {
-          "name": "ownerAta",
+          "name": "creatorAta",
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "account",
-                "path": "owner"
+                "path": "creator"
               },
               {
                 "kind": "const",
@@ -424,41 +619,8 @@ export type OneCs = {
                 ]
               },
               {
-                "kind": "const",
-                "value": [
-                  9,
-                  43,
-                  225,
-                  230,
-                  237,
-                  13,
-                  216,
-                  237,
-                  44,
-                  121,
-                  170,
-                  202,
-                  171,
-                  13,
-                  123,
-                  122,
-                  17,
-                  76,
-                  28,
-                  165,
-                  22,
-                  109,
-                  84,
-                  97,
-                  252,
-                  22,
-                  20,
-                  59,
-                  1,
-                  116,
-                  88,
-                  174
-                ]
+                "kind": "account",
+                "path": "creator"
               },
               {
                 "kind": "arg",
@@ -602,6 +764,9 @@ export type OneCs = {
           "signer": true
         },
         {
+          "name": "creator"
+        },
+        {
           "name": "encapsulatedData",
           "writable": true,
           "pda": {
@@ -623,41 +788,8 @@ export type OneCs = {
                 ]
               },
               {
-                "kind": "const",
-                "value": [
-                  9,
-                  43,
-                  225,
-                  230,
-                  237,
-                  13,
-                  216,
-                  237,
-                  44,
-                  121,
-                  170,
-                  202,
-                  171,
-                  13,
-                  123,
-                  122,
-                  17,
-                  76,
-                  28,
-                  165,
-                  22,
-                  109,
-                  84,
-                  97,
-                  252,
-                  22,
-                  20,
-                  59,
-                  1,
-                  116,
-                  88,
-                  174
-                ]
+                "kind": "account",
+                "path": "creator"
               },
               {
                 "kind": "arg",
@@ -704,6 +836,9 @@ export type OneCs = {
           "signer": true
         },
         {
+          "name": "creator"
+        },
+        {
           "name": "taker"
         },
         {
@@ -732,41 +867,8 @@ export type OneCs = {
                 ]
               },
               {
-                "kind": "const",
-                "value": [
-                  9,
-                  43,
-                  225,
-                  230,
-                  237,
-                  13,
-                  216,
-                  237,
-                  44,
-                  121,
-                  170,
-                  202,
-                  171,
-                  13,
-                  123,
-                  122,
-                  17,
-                  76,
-                  28,
-                  165,
-                  22,
-                  109,
-                  84,
-                  97,
-                  252,
-                  22,
-                  20,
-                  59,
-                  1,
-                  116,
-                  88,
-                  174
-                ]
+                "kind": "account",
+                "path": "creator"
               },
               {
                 "kind": "arg",
@@ -1157,41 +1259,8 @@ export type OneCs = {
                 ]
               },
               {
-                "kind": "const",
-                "value": [
-                  9,
-                  43,
-                  225,
-                  230,
-                  237,
-                  13,
-                  216,
-                  237,
-                  44,
-                  121,
-                  170,
-                  202,
-                  171,
-                  13,
-                  123,
-                  122,
-                  17,
-                  76,
-                  28,
-                  165,
-                  22,
-                  109,
-                  84,
-                  97,
-                  252,
-                  22,
-                  20,
-                  59,
-                  1,
-                  116,
-                  88,
-                  174
-                ]
+                "kind": "account",
+                "path": "creator"
               },
               {
                 "kind": "arg",
@@ -1244,7 +1313,7 @@ export type OneCs = {
       ],
       "accounts": [
         {
-          "name": "owner",
+          "name": "creator",
           "writable": true,
           "signer": true
         },
@@ -1270,41 +1339,8 @@ export type OneCs = {
                 ]
               },
               {
-                "kind": "const",
-                "value": [
-                  9,
-                  43,
-                  225,
-                  230,
-                  237,
-                  13,
-                  216,
-                  237,
-                  44,
-                  121,
-                  170,
-                  202,
-                  171,
-                  13,
-                  123,
-                  122,
-                  17,
-                  76,
-                  28,
-                  165,
-                  22,
-                  109,
-                  84,
-                  97,
-                  252,
-                  22,
-                  20,
-                  59,
-                  1,
-                  116,
-                  88,
-                  174
-                ]
+                "kind": "account",
+                "path": "creator"
               },
               {
                 "kind": "arg",
@@ -1346,7 +1382,7 @@ export type OneCs = {
       ],
       "accounts": [
         {
-          "name": "owner",
+          "name": "creator",
           "writable": true,
           "signer": true
         },
@@ -1355,13 +1391,13 @@ export type OneCs = {
           "writable": true
         },
         {
-          "name": "ownerAta",
+          "name": "creatorAta",
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "account",
-                "path": "owner"
+                "path": "creator"
               },
               {
                 "kind": "const",
@@ -1460,41 +1496,8 @@ export type OneCs = {
                 ]
               },
               {
-                "kind": "const",
-                "value": [
-                  9,
-                  43,
-                  225,
-                  230,
-                  237,
-                  13,
-                  216,
-                  237,
-                  44,
-                  121,
-                  170,
-                  202,
-                  171,
-                  13,
-                  123,
-                  122,
-                  17,
-                  76,
-                  28,
-                  165,
-                  22,
-                  109,
-                  84,
-                  97,
-                  252,
-                  22,
-                  20,
-                  59,
-                  1,
-                  116,
-                  88,
-                  174
-                ]
+                "kind": "account",
+                "path": "creator"
               },
               {
                 "kind": "arg",
@@ -1614,41 +1617,8 @@ export type OneCs = {
                 ]
               },
               {
-                "kind": "const",
-                "value": [
-                  9,
-                  43,
-                  225,
-                  230,
-                  237,
-                  13,
-                  216,
-                  237,
-                  44,
-                  121,
-                  170,
-                  202,
-                  171,
-                  13,
-                  123,
-                  122,
-                  17,
-                  76,
-                  28,
-                  165,
-                  22,
-                  109,
-                  84,
-                  97,
-                  252,
-                  22,
-                  20,
-                  59,
-                  1,
-                  116,
-                  88,
-                  174
-                ]
+                "kind": "account",
+                "path": "creator"
               },
               {
                 "kind": "arg",
@@ -1693,9 +1663,8 @@ export type OneCs = {
       ],
       "accounts": [
         {
-          "name": "owner",
-          "writable": true,
-          "signer": true
+          "name": "creator",
+          "writable": true
         },
         {
           "name": "tokenMint"
@@ -1717,41 +1686,8 @@ export type OneCs = {
                 ]
               },
               {
-                "kind": "const",
-                "value": [
-                  9,
-                  43,
-                  225,
-                  230,
-                  237,
-                  13,
-                  216,
-                  237,
-                  44,
-                  121,
-                  170,
-                  202,
-                  171,
-                  13,
-                  123,
-                  122,
-                  17,
-                  76,
-                  28,
-                  165,
-                  22,
-                  109,
-                  84,
-                  97,
-                  252,
-                  22,
-                  20,
-                  59,
-                  1,
-                  116,
-                  88,
-                  174
-                ]
+                "kind": "account",
+                "path": "creator"
               },
               {
                 "kind": "arg",
@@ -1891,6 +1827,9 @@ export type OneCs = {
           "signer": true
         },
         {
+          "name": "creator"
+        },
+        {
           "name": "encapsulatedData",
           "writable": true,
           "pda": {
@@ -1912,41 +1851,8 @@ export type OneCs = {
                 ]
               },
               {
-                "kind": "const",
-                "value": [
-                  9,
-                  43,
-                  225,
-                  230,
-                  237,
-                  13,
-                  216,
-                  237,
-                  44,
-                  121,
-                  170,
-                  202,
-                  171,
-                  13,
-                  123,
-                  122,
-                  17,
-                  76,
-                  28,
-                  165,
-                  22,
-                  109,
-                  84,
-                  97,
-                  252,
-                  22,
-                  20,
-                  59,
-                  1,
-                  116,
-                  88,
-                  174
-                ]
+                "kind": "account",
+                "path": "creator"
               },
               {
                 "kind": "arg",
@@ -1992,6 +1898,9 @@ export type OneCs = {
           "signer": true
         },
         {
+          "name": "creator"
+        },
+        {
           "name": "encapsulatedData",
           "writable": true,
           "pda": {
@@ -2013,41 +1922,8 @@ export type OneCs = {
                 ]
               },
               {
-                "kind": "const",
-                "value": [
-                  9,
-                  43,
-                  225,
-                  230,
-                  237,
-                  13,
-                  216,
-                  237,
-                  44,
-                  121,
-                  170,
-                  202,
-                  171,
-                  13,
-                  123,
-                  122,
-                  17,
-                  76,
-                  28,
-                  165,
-                  22,
-                  109,
-                  84,
-                  97,
-                  252,
-                  22,
-                  20,
-                  59,
-                  1,
-                  116,
-                  88,
-                  174
-                ]
+                "kind": "account",
+                "path": "creator"
               },
               {
                 "kind": "arg",
@@ -2082,41 +1958,8 @@ export type OneCs = {
                 ]
               },
               {
-                "kind": "const",
-                "value": [
-                  9,
-                  43,
-                  225,
-                  230,
-                  237,
-                  13,
-                  216,
-                  237,
-                  44,
-                  121,
-                  170,
-                  202,
-                  171,
-                  13,
-                  123,
-                  122,
-                  17,
-                  76,
-                  28,
-                  165,
-                  22,
-                  109,
-                  84,
-                  97,
-                  252,
-                  22,
-                  20,
-                  59,
-                  1,
-                  116,
-                  88,
-                  174
-                ]
+                "kind": "account",
+                "path": "creator"
               },
               {
                 "kind": "arg",
@@ -2270,7 +2113,7 @@ export type OneCs = {
         "kind": "struct",
         "fields": [
           {
-            "name": "owner",
+            "name": "creator",
             "type": "pubkey"
           },
           {
@@ -2317,6 +2160,10 @@ export type OneCs = {
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "creator",
+            "type": "pubkey"
+          },
           {
             "name": "owner",
             "type": "pubkey"
