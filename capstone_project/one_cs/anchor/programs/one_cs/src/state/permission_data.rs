@@ -8,12 +8,15 @@ pub enum Role {
     TimeLimited = 4, // TimeLimited: Can access the encapsulated data for a limited time
 }
 
-#[derive(InitSpace, AnchorSerialize, AnchorDeserialize, Clone, PartialEq, Eq)]
-pub struct Permission {
+#[account]
+#[derive(InitSpace)]
+pub struct PermissionedWallet {
+    pub main_data_pda: Pubkey,
     pub role: Role,
     pub wallet: Pubkey,
     pub start_time: u64,
     pub end_time: u64,
+    pub bump: u8,
 }
 
 #[account]
@@ -39,8 +42,6 @@ pub struct PermissionData {
     #[max_len(32)]
     pub label: String,
     pub data: EncapsulatedData,
-    #[max_len(5, 100)]
-    pub permissions: Vec<Permission>,
     pub bump: u8,
 }
 
