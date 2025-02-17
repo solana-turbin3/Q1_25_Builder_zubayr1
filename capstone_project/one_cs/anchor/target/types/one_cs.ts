@@ -70,6 +70,87 @@ export type OneCs = {
           }
         },
         {
+          "name": "ownerPermissionedWallet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  101,
+                  100,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "encapsulated_data.owner",
+                "account": "permissionData"
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
+        },
+        {
+          "name": "newOwnerPermissionedWallet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  101,
+                  100,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "signer"
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
+        },
+        {
           "name": "delegatedOwner",
           "pda": {
             "seeds": [
@@ -138,11 +219,16 @@ export type OneCs = {
           "signer": true
         },
         {
-          "name": "creator"
+          "name": "creator",
+          "relations": [
+            "encapsulatedData"
+          ]
+        },
+        {
+          "name": "permittedWallet"
         },
         {
           "name": "encapsulatedData",
-          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -173,7 +259,83 @@ export type OneCs = {
           }
         },
         {
-          "name": "permittedWallet"
+          "name": "payerPermissionedWallet",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  101,
+                  100,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "payer"
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
+        },
+        {
+          "name": "permissionedWallet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  101,
+                  100,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "permittedWallet"
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
         },
         {
           "name": "systemProgram",
@@ -799,6 +961,45 @@ export type OneCs = {
           }
         },
         {
+          "name": "payerPermissionedWallet",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  101,
+                  100,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "payer"
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
+        },
+        {
           "name": "systemProgram",
           "address": "11111111111111111111111111111111"
         }
@@ -1238,6 +1439,45 @@ export type OneCs = {
           }
         },
         {
+          "name": "payerPermissionedWallet",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  101,
+                  100,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "payer"
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
+        },
+        {
           "name": "encapsulatedData",
           "writable": true,
           "pda": {
@@ -1350,6 +1590,46 @@ export type OneCs = {
           }
         },
         {
+          "name": "permissionedWallet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  101,
+                  100,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "creator"
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
+        },
+        {
           "name": "systemProgram",
           "address": "11111111111111111111111111111111"
         }
@@ -1389,96 +1669,6 @@ export type OneCs = {
         {
           "name": "tokenMint",
           "writable": true
-        },
-        {
-          "name": "creatorAta",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "creator"
-              },
-              {
-                "kind": "const",
-                "value": [
-                  6,
-                  221,
-                  246,
-                  225,
-                  215,
-                  101,
-                  161,
-                  147,
-                  217,
-                  203,
-                  225,
-                  70,
-                  206,
-                  235,
-                  121,
-                  172,
-                  28,
-                  180,
-                  133,
-                  237,
-                  95,
-                  91,
-                  55,
-                  145,
-                  58,
-                  140,
-                  245,
-                  133,
-                  126,
-                  255,
-                  0,
-                  169
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "tokenMint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140,
-                151,
-                37,
-                143,
-                78,
-                36,
-                137,
-                241,
-                187,
-                61,
-                16,
-                41,
-                20,
-                142,
-                13,
-                131,
-                11,
-                90,
-                19,
-                153,
-                218,
-                255,
-                16,
-                132,
-                4,
-                142,
-                123,
-                216,
-                219,
-                233,
-                248,
-                89
-              ]
-            }
-          }
         },
         {
           "name": "escrow",
@@ -1614,6 +1804,46 @@ export type OneCs = {
                   111,
                   110,
                   115
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "creator"
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
+        },
+        {
+          "name": "permissionedWallet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  101,
+                  100,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
                 ]
               },
               {
@@ -1830,8 +2060,10 @@ export type OneCs = {
           "name": "creator"
         },
         {
+          "name": "permittedWallet"
+        },
+        {
           "name": "encapsulatedData",
-          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -1862,7 +2094,83 @@ export type OneCs = {
           }
         },
         {
-          "name": "permittedWallet"
+          "name": "payerPermissionedWallet",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  101,
+                  100,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "payer"
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
+        },
+        {
+          "name": "permissionedWallet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  101,
+                  100,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "permittedWallet"
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
         },
         {
           "name": "systemProgram",
@@ -1901,6 +2209,9 @@ export type OneCs = {
           "name": "creator"
         },
         {
+          "name": "newOwner"
+        },
+        {
           "name": "encapsulatedData",
           "writable": true,
           "pda": {
@@ -1924,6 +2235,86 @@ export type OneCs = {
               {
                 "kind": "account",
                 "path": "creator"
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
+        },
+        {
+          "name": "ownerPermissionedWallet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  101,
+                  100,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
+        },
+        {
+          "name": "newOwnerPermissionedWallet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  101,
+                  100,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "newOwner"
               },
               {
                 "kind": "arg",
@@ -1979,10 +2370,6 @@ export type OneCs = {
           "type": "string"
         },
         {
-          "name": "newOwner",
-          "type": "pubkey"
-        },
-        {
           "name": "ownershipTime",
           "type": "u64"
         }
@@ -2027,6 +2414,19 @@ export type OneCs = {
         71,
         19,
         75
+      ]
+    },
+    {
+      "name": "permissionedWallet",
+      "discriminator": [
+        111,
+        6,
+        73,
+        253,
+        228,
+        82,
+        230,
+        217
       ]
     }
   ],
@@ -2128,34 +2528,6 @@ export type OneCs = {
       }
     },
     {
-      "name": "permission",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "role",
-            "type": {
-              "defined": {
-                "name": "role"
-              }
-            }
-          },
-          {
-            "name": "wallet",
-            "type": "pubkey"
-          },
-          {
-            "name": "startTime",
-            "type": "u64"
-          },
-          {
-            "name": "endTime",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
       "name": "permissionData",
       "type": {
         "kind": "struct",
@@ -2181,14 +2553,40 @@ export type OneCs = {
             }
           },
           {
-            "name": "permissions",
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "permissionedWallet",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mainDataPda",
+            "type": "pubkey"
+          },
+          {
+            "name": "role",
             "type": {
-              "vec": {
-                "defined": {
-                  "name": "permission"
-                }
+              "defined": {
+                "name": "role"
               }
             }
+          },
+          {
+            "name": "wallet",
+            "type": "pubkey"
+          },
+          {
+            "name": "startTime",
+            "type": "u64"
+          },
+          {
+            "name": "endTime",
+            "type": "u64"
           },
           {
             "name": "bump",

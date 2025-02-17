@@ -30,7 +30,13 @@ describe("one_cs", () => {
   let encapsulatePDA: PublicKey;
   let escrowPDA: PublicKey;
   let encapsulateTokenPDA: PublicKey;
-
+  let permissionedWallet0PDA: PublicKey;
+  let permissionedWallet1PDA: PublicKey;
+  let permissionedWallet2PDA: PublicKey;
+  let permissionedWallet3PDA: PublicKey;
+  let permissionedWallet0TokenPDA: PublicKey;
+  let permissionedWallet1TokenPDA: PublicKey;
+  let permissionedWallet2TokenPDA: PublicKey;
   let vaultAta: PublicKey;
   let payerAta: PublicKey;
   let ownerAta: PublicKey;
@@ -138,6 +144,69 @@ describe("one_cs", () => {
       program.programId
     );
 
+    [permissionedWallet0PDA] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("permissioned_wallet"),
+        payer.publicKey.toBuffer(),
+        Buffer.from(label),
+      ],
+      program.programId
+    );
+
+    [permissionedWallet1PDA] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("permissioned_wallet"),
+        newPublicKey.toBuffer(),
+        Buffer.from(label),
+      ],
+      program.programId
+    );
+
+    [permissionedWallet2PDA] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("permissioned_wallet"),
+        newPublicKey2.toBuffer(),
+        Buffer.from(label),
+      ],
+      program.programId
+    );
+
+    [permissionedWallet3PDA] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("permissioned_wallet"),
+        newPublicKey3.toBuffer(),
+        Buffer.from(label),
+      ],
+      program.programId
+    );
+
+    [permissionedWallet0TokenPDA] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("permissioned_wallet"),
+        payer.publicKey.toBuffer(),
+        Buffer.from(tokenlabel),
+      ],
+      program.programId
+    );
+
+    [permissionedWallet1TokenPDA] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("permissioned_wallet"),
+        newPublicKey.toBuffer(),
+        Buffer.from(tokenlabel),
+      ],
+      program.programId
+    );
+
+    [permissionedWallet2TokenPDA] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("permissioned_wallet"),
+        newPublicKey2.toBuffer(),
+        Buffer.from(tokenlabel),
+      ],
+      program.programId
+    );
+
     [escrowPDA] = PublicKey.findProgramAddressSync(
       [
         Buffer.from("escrow"),
@@ -196,16 +265,37 @@ describe("one_cs", () => {
       encapsulatePDA
     );
 
+    const permissionedWallet0 = await program.account.permissionedWallet.fetch(
+      permissionedWallet0PDA
+    );
+
     expect(encapsulatedData.creator).toEqual(payer.publicKey);
     expect(encapsulatedData.owner).toEqual(payer.publicKey);
     expect(encapsulatedData.label).toEqual(label);
     expect(encapsulatedData.data).toEqual(dataObject);
-    expect(encapsulatedData.permissions.length).toEqual(1);
-    expect(encapsulatedData.permissions[0].role).toEqual({ owner: {} });
-    expect(encapsulatedData.permissions[0].wallet).toEqual(payer.publicKey);
+    expect(permissionedWallet0.role).toEqual({ owner: {} });
+    expect(permissionedWallet0.wallet).toEqual(payer.publicKey);
+    expect(permissionedWallet0.startTime.toNumber()).toBe(0);
+    expect(permissionedWallet0.endTime.toNumber()).toBe(0);
+    expect(permissionedWallet0.mainDataPda).toEqual(encapsulatePDA);
   });
 
   it("add permission", async () => {
+    // will fail here
+    // await program.methods
+    //   .addPermission(
+    //     label,
+    //     new anchor.BN(2),
+    //     new anchor.BN(0),
+    //     new anchor.BN(0)
+    //   )
+    //   .accounts({
+    //     payer: newPublicKey,
+    //     creator: payer.publicKey,
+    //     permittedWallet: newPublicKey2,
+    //   })
+    //   .rpc({ commitment: "confirmed" });
+
     await program.methods
       .addPermission(
         label,
@@ -224,21 +314,24 @@ describe("one_cs", () => {
       encapsulatePDA
     );
 
-    expect(encapsulatedData.permissions.length).toBe(2);
-
-    expect(encapsulatedData.permissions[0].role).toEqual({ owner: {} });
-    expect(encapsulatedData.permissions[0].wallet.toString()).toBe(
-      payer.publicKey.toString()
+    const permissionedWallet0 = await program.account.permissionedWallet.fetch(
+      permissionedWallet0PDA
     );
-    expect(encapsulatedData.permissions[0].startTime.toNumber()).toBe(0);
-    expect(encapsulatedData.permissions[0].endTime.toNumber()).toBe(0);
 
-    expect(encapsulatedData.permissions[1].role).toEqual({ admin: {} });
-    expect(encapsulatedData.permissions[1].wallet.toString()).toBe(
-      newPublicKey.toString()
+    let permissionedWallet1 = await program.account.permissionedWallet.fetch(
+      permissionedWallet1PDA
     );
-    expect(encapsulatedData.permissions[1].startTime.toNumber()).toBe(0);
-    expect(encapsulatedData.permissions[1].endTime.toNumber()).toBe(0);
+
+    expect(encapsulatedData.creator).toEqual(payer.publicKey);
+
+    expect(permissionedWallet0.role).toEqual({ owner: {} });
+    expect(permissionedWallet0.wallet).toEqual(payer.publicKey);
+
+    expect(permissionedWallet1.role).toEqual({ admin: {} });
+    expect(permissionedWallet1.wallet).toEqual(newPublicKey);
+    expect(permissionedWallet1.startTime.toNumber()).toBe(0);
+    expect(permissionedWallet1.endTime.toNumber()).toBe(0);
+    expect(permissionedWallet1.mainDataPda).toEqual(encapsulatePDA);
 
     await program.methods
       .addPermission(
@@ -255,17 +348,31 @@ describe("one_cs", () => {
       .signers([newKeypair])
       .rpc({ commitment: "confirmed" });
 
-    encapsulatedData = await program.account.permissionData.fetch(
-      encapsulatePDA
+    let permissionedWallet2 = await program.account.permissionedWallet.fetch(
+      permissionedWallet2PDA
     );
 
-    expect(encapsulatedData.permissions.length).toBe(3);
-    expect(encapsulatedData.permissions[2].role).toEqual({ admin: {} });
-    expect(encapsulatedData.permissions[2].wallet.toString()).toBe(
-      newPublicKey2.toString()
-    );
-    expect(encapsulatedData.permissions[2].startTime.toNumber()).toBe(0);
-    expect(encapsulatedData.permissions[2].endTime.toNumber()).toBe(0);
+    expect(permissionedWallet2.role).toEqual({ admin: {} });
+    expect(permissionedWallet2.wallet).toEqual(newPublicKey2);
+    expect(permissionedWallet2.startTime.toNumber()).toBe(0);
+    expect(permissionedWallet2.endTime.toNumber()).toBe(0);
+    expect(permissionedWallet2.mainDataPda).toEqual(encapsulatePDA);
+
+    // will fail here
+    // await program.methods
+    //   .addPermission(
+    //     label,
+    //     new anchor.BN(3),
+    //     new anchor.BN(0),
+    //     new anchor.BN(0)
+    //   )
+    //   .accounts({
+    //     payer: newPublicKey,
+    //     creator: payer.publicKey,
+    //     permittedWallet: newPublicKey2,
+    //   })
+    //   .signers([newKeypair])
+    //   .rpc({ commitment: "confirmed" });
 
     await program.methods
       .addPermission(
@@ -281,16 +388,14 @@ describe("one_cs", () => {
       })
       .rpc({ commitment: "confirmed" });
 
-    encapsulatedData = await program.account.permissionData.fetch(
-      encapsulatePDA
+    permissionedWallet1 = await program.account.permissionedWallet.fetch(
+      permissionedWallet1PDA
     );
 
-    expect(encapsulatedData.permissions[1].role).toEqual({ fullAccess: {} });
-    expect(encapsulatedData.permissions[1].wallet.toString()).toBe(
-      newPublicKey.toString()
-    );
-    expect(encapsulatedData.permissions[1].startTime.toNumber()).toBe(0);
-    expect(encapsulatedData.permissions[1].endTime.toNumber()).toBe(0);
+    expect(permissionedWallet1.role).toEqual({ fullAccess: {} });
+    expect(permissionedWallet1.wallet).toEqual(newPublicKey);
+    expect(permissionedWallet1.startTime.toNumber()).toBe(0);
+    expect(permissionedWallet1.endTime.toNumber()).toBe(0);
 
     await program.methods
       .addPermission(
@@ -306,18 +411,14 @@ describe("one_cs", () => {
       })
       .rpc({ commitment: "confirmed" });
 
-    encapsulatedData = await program.account.permissionData.fetch(
-      encapsulatePDA
+    permissionedWallet2 = await program.account.permissionedWallet.fetch(
+      permissionedWallet2PDA
     );
 
-    expect(encapsulatedData.permissions[2].role).toEqual({ timeLimited: {} });
-    expect(encapsulatedData.permissions[2].wallet.toString()).toBe(
-      newPublicKey2.toString()
-    );
-    expect(encapsulatedData.permissions[2].startTime.toNumber()).toBe(
-      1736449654
-    );
-    expect(encapsulatedData.permissions[2].endTime.toNumber()).toBe(1836449654);
+    expect(permissionedWallet2.role).toEqual({ timeLimited: {} });
+    expect(permissionedWallet2.wallet).toEqual(newPublicKey2);
+    expect(permissionedWallet2.startTime.toNumber()).toBe(1736449654);
+    expect(permissionedWallet2.endTime.toNumber()).toBe(1836449654);
   });
 
   it("remove permission", async () => {
@@ -330,27 +431,14 @@ describe("one_cs", () => {
       })
       .rpc({ commitment: "confirmed" });
 
-    let encapsulatedData = await program.account.permissionData.fetch(
-      encapsulatePDA
-    );
-
-    expect(encapsulatedData.permissions.length).toBe(2);
-
-    expect(encapsulatedData.permissions[0].role).toEqual({ owner: {} });
-    expect(encapsulatedData.permissions[0].wallet.toString()).toBe(
-      payer.publicKey.toString()
-    );
-    expect(encapsulatedData.permissions[0].startTime.toNumber()).toBe(0);
-    expect(encapsulatedData.permissions[0].endTime.toNumber()).toBe(0);
-
-    expect(encapsulatedData.permissions[1].role).toEqual({ timeLimited: {} });
-    expect(encapsulatedData.permissions[1].wallet.toString()).toBe(
-      newPublicKey2.toString()
-    );
-    expect(encapsulatedData.permissions[1].startTime.toNumber()).toBe(
-      1736449654
-    );
-    expect(encapsulatedData.permissions[1].endTime.toNumber()).toBe(1836449654);
+    try {
+      await program.account.permissionedWallet.fetch(permissionedWallet1PDA);
+      // If fetch succeeds, that's a failure in the test:
+      throw new Error("permissionedWallet1 should not exist anymore!");
+    } catch (e: any) {
+      // We expect any error indicating the account doesn't exist
+      expect(e.message).toMatch(/Could not find|Account does not exist/);
+    }
 
     /// add permission again for further testing
     await program.methods
@@ -382,37 +470,54 @@ describe("one_cs", () => {
       .signers([newKeypair2])
       .rpc({ commitment: "confirmed" });
 
-    encapsulatedData = await program.account.permissionData.fetch(
-      encapsulatePDA
+    let permissionedWallet1 = await program.account.permissionedWallet.fetch(
+      permissionedWallet1PDA
     );
 
-    expect(encapsulatedData.permissions.length).toBe(3);
+    expect(permissionedWallet1.role).toEqual({ fullAccess: {} });
+    expect(permissionedWallet1.wallet).toEqual(newPublicKey);
 
-    expect(encapsulatedData.permissions[0].role).toEqual({ owner: {} });
-    expect(encapsulatedData.permissions[0].wallet.toString()).toBe(
-      payer.publicKey.toString()
+    let permissionedWallet2 = await program.account.permissionedWallet.fetch(
+      permissionedWallet2PDA
     );
-    expect(encapsulatedData.permissions[0].startTime.toNumber()).toBe(0);
-    expect(encapsulatedData.permissions[0].endTime.toNumber()).toBe(0);
 
-    expect(encapsulatedData.permissions[1].role).toEqual({ admin: {} });
-    expect(encapsulatedData.permissions[1].wallet.toString()).toBe(
-      newPublicKey2.toString()
-    );
-    expect(encapsulatedData.permissions[1].startTime.toNumber()).toBe(0);
-    expect(encapsulatedData.permissions[1].endTime.toNumber()).toBe(0);
+    expect(permissionedWallet2.role).toEqual({ admin: {} });
+    expect(permissionedWallet2.wallet).toEqual(newPublicKey2);
 
-    expect(encapsulatedData.permissions[2].role).toEqual({ fullAccess: {} });
-    expect(encapsulatedData.permissions[2].wallet.toString()).toBe(
-      newPublicKey.toString()
-    );
-    expect(encapsulatedData.permissions[2].startTime.toNumber()).toBe(0);
-    expect(encapsulatedData.permissions[2].endTime.toNumber()).toBe(0);
+    await program.methods
+      .removePermission(label)
+      .accounts({
+        payer: newPublicKey2,
+        creator: payer.publicKey,
+        permittedWallet: newPublicKey,
+      })
+      .signers([newKeypair2])
+      .rpc({ commitment: "confirmed" });
+
+    try {
+      await program.account.permissionedWallet.fetch(permissionedWallet1PDA);
+      // If fetch succeeds, that's a failure in the test:
+      throw new Error("permissionedWallet1 should not exist anymore!");
+    } catch (e: any) {
+      // We expect any error indicating the account doesn't exist
+      expect(e.message).toMatch(/Could not find|Account does not exist/);
+    }
+
+    // will fail here
+    // await program.methods
+    //   .removePermission(label)
+    //   .accounts({
+    //     payer: newPublicKey2,
+    //     creator: payer.publicKey,
+    //     permittedWallet: newPublicKey,
+    //   })
+    //   .signers([newKeypair2])
+    //   .rpc({ commitment: "confirmed" });
 
     await program.methods
       .addPermission(
         label,
-        new anchor.BN(2),
+        new anchor.BN(3),
         new anchor.BN(0),
         new anchor.BN(0)
       )
@@ -424,16 +529,23 @@ describe("one_cs", () => {
       .signers([newKeypair2])
       .rpc({ commitment: "confirmed" });
 
+    permissionedWallet1 = await program.account.permissionedWallet.fetch(
+      permissionedWallet1PDA
+    );
+
+    expect(permissionedWallet1.role).toEqual({ fullAccess: {} });
+    expect(permissionedWallet1.wallet).toEqual(newPublicKey);
+
     // will fail here
     // await program.methods
     //   .removePermission(label)
     //   .accounts({
-    //     payer: newPublicKey2,
+    //     payer: newPublicKey,
     //     creator: payer.publicKey,
-    //     permittedWallet: newPublicKey,
+    //     permittedWallet: newPublicKey2,
     //   })
-    //   .signers([newKeypair2])
-    //   .rpc({commitment: "confirmed"})
+    //   .signers([newKeypair])
+    //   .rpc({ commitment: "confirmed" });
   });
 
   it("edit data with different keypair", async () => {
@@ -526,10 +638,11 @@ describe("one_cs", () => {
 
   it("transfer ownership", async () => {
     await program.methods
-      .transferOwnership(label, newPublicKey, new anchor.BN(0))
+      .transferOwnership(label, new anchor.BN(0))
       .accounts({
         owner: payer.publicKey,
         creator: payer.publicKey,
+        newOwner: newPublicKey,
       })
       .rpc({ commitment: "confirmed" });
 
@@ -539,15 +652,26 @@ describe("one_cs", () => {
 
     expect(encapsulatedData.owner).toEqual(newPublicKey);
 
-    expect(encapsulatedData.permissions[0].role).toEqual({ admin: {} });
-    expect(encapsulatedData.permissions[1].role).toEqual({ admin: {} });
-    expect(encapsulatedData.permissions[2].role).toEqual({ owner: {} });
+    let permissionedWallet1 = await program.account.permissionedWallet.fetch(
+      permissionedWallet1PDA
+    );
+
+    expect(permissionedWallet1.role).toEqual({ owner: {} });
+    expect(permissionedWallet1.wallet).toEqual(newPublicKey);
+
+    let permissionedWallet0 = await program.account.permissionedWallet.fetch(
+      permissionedWallet0PDA
+    );
+
+    expect(permissionedWallet0.role).toEqual({ admin: {} });
+    expect(permissionedWallet0.wallet).toEqual(payer.publicKey);
 
     await program.methods
-      .transferOwnership(label, newPublicKey3, new anchor.BN(1111))
+      .transferOwnership(label, new anchor.BN(1111))
       .accounts({
         owner: newPublicKey,
         creator: payer.publicKey,
+        newOwner: newPublicKey3,
       })
       .signers([newKeypair])
       .rpc({ commitment: "confirmed" });
@@ -557,17 +681,28 @@ describe("one_cs", () => {
     );
 
     expect(encapsulatedData.owner).toEqual(newPublicKey3);
-    expect(encapsulatedData.permissions[0].role).toEqual({ admin: {} });
-    expect(encapsulatedData.permissions[1].role).toEqual({ admin: {} });
-    expect(encapsulatedData.permissions[2].role).toEqual({ admin: {} });
-    expect(encapsulatedData.permissions[3].role).toEqual({ owner: {} });
+
+    permissionedWallet1 = await program.account.permissionedWallet.fetch(
+      permissionedWallet1PDA
+    );
+
+    expect(permissionedWallet1.role).toEqual({ admin: {} });
+    expect(permissionedWallet1.wallet).toEqual(newPublicKey);
+
+    let permissionedWallet3 = await program.account.permissionedWallet.fetch(
+      permissionedWallet3PDA
+    );
+
+    expect(permissionedWallet3.role).toEqual({ owner: {} });
+    expect(permissionedWallet3.wallet).toEqual(newPublicKey3);
 
     // will fail here
     // await program.methods
-    //   .transferOwnership(label, newPublicKey, new anchor.BN(0))
+    //   .transferOwnership(label, new anchor.BN(0))
     //   .accounts({
     //     owner: payer.publicKey,
     //     creator: payer.publicKey,
+    //     newOwner: newPublicKey,
     //   })
     //   .rpc({ commitment: "confirmed" });
   });
@@ -577,14 +712,11 @@ describe("one_cs", () => {
     const currentTimePlusSomeSeconds = Math.floor(Date.now() / 1000) + 1;
 
     await program.methods
-      .transferOwnership(
-        label,
-        newPublicKey,
-        new anchor.BN(currentTimePlusSomeSeconds)
-      )
+      .transferOwnership(label, new anchor.BN(currentTimePlusSomeSeconds))
       .accounts({
         owner: newPublicKey3,
         creator: payer.publicKey,
+        newOwner: newPublicKey,
       })
       .signers([newKeypair3])
       .rpc({ commitment: "confirmed" });
@@ -614,17 +746,28 @@ describe("one_cs", () => {
     );
 
     expect(encapsulatedData.owner).toEqual(newPublicKey);
-    expect(encapsulatedData.permissions[0].role).toEqual({ admin: {} });
-    expect(encapsulatedData.permissions[1].role).toEqual({ admin: {} });
-    expect(encapsulatedData.permissions[2].role).toEqual({ owner: {} });
-    expect(encapsulatedData.permissions[3].role).toEqual({ admin: {} });
+
+    let permissionedWallet1 = await program.account.permissionedWallet.fetch(
+      permissionedWallet1PDA
+    );
+
+    expect(permissionedWallet1.role).toEqual({ owner: {} });
+    expect(permissionedWallet1.wallet).toEqual(newPublicKey);
+
+    let permissionedWallet3 = await program.account.permissionedWallet.fetch(
+      permissionedWallet3PDA
+    );
+
+    expect(permissionedWallet3.role).toEqual({ admin: {} });
+    expect(permissionedWallet3.wallet).toEqual(newPublicKey3);
 
     // reset ownership for next tests
     await program.methods
-      .transferOwnership(label, payer.publicKey, new anchor.BN(0))
+      .transferOwnership(label, new anchor.BN(0))
       .accounts({
         owner: newPublicKey,
         creator: payer.publicKey,
+        newOwner: payer.publicKey,
       })
       .signers([newKeypair])
       .rpc({ commitment: "confirmed" });
@@ -669,12 +812,6 @@ describe("one_cs", () => {
   });
 
   it("encapsulate token", async () => {
-    // Get the current vault amount first
-    const vaultAta = await anchor.utils.token.associatedAddress({
-      mint: tokenMint,
-      owner: escrowPDA,
-    });
-
     // @ts-ignore
     const vaultAccount = await getAccount(banksClient, vaultAta);
     const currentAmount = vaultAccount.amount;
@@ -697,12 +834,15 @@ describe("one_cs", () => {
 
     expect(encapsulatedData.data.token.tokenMint).toEqual(tokenMint);
     expect(receivedAmountStr).toEqual(currentAmount.toString());
-    expect(encapsulatedData.owner).toEqual(payer.publicKey);
     expect(encapsulatedData.creator).toEqual(payer.publicKey);
     expect(encapsulatedData.label).toEqual(tokenlabel);
-    expect(encapsulatedData.permissions.length).toEqual(1);
-    expect(encapsulatedData.permissions[0].role).toEqual({ owner: {} });
-    expect(encapsulatedData.permissions[0].wallet).toEqual(payer.publicKey);
+
+    let permissionedWallet0 = await program.account.permissionedWallet.fetch(
+      permissionedWallet0TokenPDA
+    );
+
+    expect(permissionedWallet0.role).toEqual({ owner: {} });
+    expect(permissionedWallet0.wallet).toEqual(payer.publicKey);
   });
 
   it("add permission to token", async () => {
@@ -724,13 +864,17 @@ describe("one_cs", () => {
       encapsulateTokenPDA
     );
 
-    expect(encapsulatedData.permissions.length).toBe(2);
+    let permissionedWallet1 = await program.account.permissionedWallet.fetch(
+      permissionedWallet1TokenPDA
+    );
 
-    expect(encapsulatedData.permissions[0].role).toEqual({ owner: {} });
-    expect(encapsulatedData.permissions[0].wallet).toEqual(payer.publicKey);
+    expect(permissionedWallet1.role).toEqual({ admin: {} });
+    expect(permissionedWallet1.wallet).toEqual(newPublicKey);
 
-    expect(encapsulatedData.permissions[1].role).toEqual({ admin: {} });
-    expect(encapsulatedData.permissions[1].wallet).toEqual(newPublicKey);
+    expect(encapsulatedData.data.token.tokenAmount.toString()).toEqual(
+      amount.toString()
+    );
+    expect(encapsulatedData.data.token.tokenMint).toEqual(tokenMint);
 
     await program.methods
       .addPermission(
@@ -747,18 +891,14 @@ describe("one_cs", () => {
       .signers([newKeypair])
       .rpc({ commitment: "confirmed" });
 
-    encapsulatedData = await program.account.permissionData.fetch(
-      encapsulateTokenPDA
+    let permissionedWallet2 = await program.account.permissionedWallet.fetch(
+      permissionedWallet2TokenPDA
     );
 
-    expect(encapsulatedData.permissions.length).toBe(3);
-
-    expect(encapsulatedData.permissions[2].role).toEqual({ timeLimited: {} });
-    expect(encapsulatedData.permissions[2].wallet).toEqual(newPublicKey2);
-    expect(encapsulatedData.permissions[2].startTime.toNumber()).toBe(
-      1736449654
-    );
-    expect(encapsulatedData.permissions[2].endTime.toNumber()).toBe(1836449654);
+    expect(permissionedWallet2.role).toEqual({ timeLimited: {} });
+    expect(permissionedWallet2.wallet).toEqual(newPublicKey2);
+    expect(permissionedWallet2.startTime.toNumber()).toBe(1736449654);
+    expect(permissionedWallet2.endTime.toNumber()).toBe(1836449654);
   });
 
   it("remove permission from token", async () => {
@@ -771,11 +911,16 @@ describe("one_cs", () => {
       })
       .rpc({ commitment: "confirmed" });
 
-    let encapsulatedData = await program.account.permissionData.fetch(
-      encapsulateTokenPDA
-    );
-
-    expect(encapsulatedData.permissions.length).toBe(2);
+    try {
+      await program.account.permissionedWallet.fetch(
+        permissionedWallet2TokenPDA
+      );
+      // If fetch succeeds, that's a failure in the test:
+      throw new Error("permissionedWallet2 should not exist anymore!");
+    } catch (e: any) {
+      // We expect any error indicating the account doesn't exist
+      expect(e.message).toMatch(/Could not find|Account does not exist/);
+    }
   });
 
   it("edit token data: deposit", async () => {

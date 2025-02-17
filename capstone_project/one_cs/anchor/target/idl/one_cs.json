@@ -64,6 +64,87 @@
           }
         },
         {
+          "name": "owner_permissioned_wallet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  101,
+                  100,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "encapsulated_data.owner",
+                "account": "PermissionData"
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
+        },
+        {
+          "name": "new_owner_permissioned_wallet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  101,
+                  100,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "signer"
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
+        },
+        {
           "name": "delegated_owner",
           "pda": {
             "seeds": [
@@ -132,11 +213,16 @@
           "signer": true
         },
         {
-          "name": "creator"
+          "name": "creator",
+          "relations": [
+            "encapsulated_data"
+          ]
+        },
+        {
+          "name": "permitted_wallet"
         },
         {
           "name": "encapsulated_data",
-          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -167,7 +253,83 @@
           }
         },
         {
-          "name": "permitted_wallet"
+          "name": "payer_permissioned_wallet",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  101,
+                  100,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "payer"
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
+        },
+        {
+          "name": "permissioned_wallet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  101,
+                  100,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "permitted_wallet"
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
         },
         {
           "name": "system_program",
@@ -793,6 +955,45 @@
           }
         },
         {
+          "name": "payer_permissioned_wallet",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  101,
+                  100,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "payer"
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
+        },
+        {
           "name": "system_program",
           "address": "11111111111111111111111111111111"
         }
@@ -1232,6 +1433,45 @@
           }
         },
         {
+          "name": "payer_permissioned_wallet",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  101,
+                  100,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "payer"
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
+        },
+        {
           "name": "encapsulated_data",
           "writable": true,
           "pda": {
@@ -1344,6 +1584,46 @@
           }
         },
         {
+          "name": "permissioned_wallet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  101,
+                  100,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "creator"
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
+        },
+        {
           "name": "system_program",
           "address": "11111111111111111111111111111111"
         }
@@ -1383,96 +1663,6 @@
         {
           "name": "token_mint",
           "writable": true
-        },
-        {
-          "name": "creator_ata",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "creator"
-              },
-              {
-                "kind": "const",
-                "value": [
-                  6,
-                  221,
-                  246,
-                  225,
-                  215,
-                  101,
-                  161,
-                  147,
-                  217,
-                  203,
-                  225,
-                  70,
-                  206,
-                  235,
-                  121,
-                  172,
-                  28,
-                  180,
-                  133,
-                  237,
-                  95,
-                  91,
-                  55,
-                  145,
-                  58,
-                  140,
-                  245,
-                  133,
-                  126,
-                  255,
-                  0,
-                  169
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "token_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140,
-                151,
-                37,
-                143,
-                78,
-                36,
-                137,
-                241,
-                187,
-                61,
-                16,
-                41,
-                20,
-                142,
-                13,
-                131,
-                11,
-                90,
-                19,
-                153,
-                218,
-                255,
-                16,
-                132,
-                4,
-                142,
-                123,
-                216,
-                219,
-                233,
-                248,
-                89
-              ]
-            }
-          }
         },
         {
           "name": "escrow",
@@ -1608,6 +1798,46 @@
                   111,
                   110,
                   115
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "creator"
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
+        },
+        {
+          "name": "permissioned_wallet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  101,
+                  100,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
                 ]
               },
               {
@@ -1824,8 +2054,10 @@
           "name": "creator"
         },
         {
+          "name": "permitted_wallet"
+        },
+        {
           "name": "encapsulated_data",
-          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -1856,7 +2088,83 @@
           }
         },
         {
-          "name": "permitted_wallet"
+          "name": "payer_permissioned_wallet",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  101,
+                  100,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "payer"
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
+        },
+        {
+          "name": "permissioned_wallet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  101,
+                  100,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "permitted_wallet"
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
         },
         {
           "name": "system_program",
@@ -1895,6 +2203,9 @@
           "name": "creator"
         },
         {
+          "name": "new_owner"
+        },
+        {
           "name": "encapsulated_data",
           "writable": true,
           "pda": {
@@ -1918,6 +2229,86 @@
               {
                 "kind": "account",
                 "path": "creator"
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner_permissioned_wallet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  101,
+                  100,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              },
+              {
+                "kind": "arg",
+                "path": "label"
+              }
+            ]
+          }
+        },
+        {
+          "name": "new_owner_permissioned_wallet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  101,
+                  114,
+                  109,
+                  105,
+                  115,
+                  115,
+                  105,
+                  111,
+                  110,
+                  101,
+                  100,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "new_owner"
               },
               {
                 "kind": "arg",
@@ -1973,10 +2364,6 @@
           "type": "string"
         },
         {
-          "name": "new_owner",
-          "type": "pubkey"
-        },
-        {
           "name": "ownership_time",
           "type": "u64"
         }
@@ -2021,6 +2408,19 @@
         71,
         19,
         75
+      ]
+    },
+    {
+      "name": "PermissionedWallet",
+      "discriminator": [
+        111,
+        6,
+        73,
+        253,
+        228,
+        82,
+        230,
+        217
       ]
     }
   ],
@@ -2122,34 +2522,6 @@
       }
     },
     {
-      "name": "Permission",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "role",
-            "type": {
-              "defined": {
-                "name": "Role"
-              }
-            }
-          },
-          {
-            "name": "wallet",
-            "type": "pubkey"
-          },
-          {
-            "name": "start_time",
-            "type": "u64"
-          },
-          {
-            "name": "end_time",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
       "name": "PermissionData",
       "type": {
         "kind": "struct",
@@ -2175,14 +2547,40 @@
             }
           },
           {
-            "name": "permissions",
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PermissionedWallet",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "main_data_pda",
+            "type": "pubkey"
+          },
+          {
+            "name": "role",
             "type": {
-              "vec": {
-                "defined": {
-                  "name": "Permission"
-                }
+              "defined": {
+                "name": "Role"
               }
             }
+          },
+          {
+            "name": "wallet",
+            "type": "pubkey"
+          },
+          {
+            "name": "start_time",
+            "type": "u64"
+          },
+          {
+            "name": "end_time",
+            "type": "u64"
           },
           {
             "name": "bump",
