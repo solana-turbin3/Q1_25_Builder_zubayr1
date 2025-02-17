@@ -13,12 +13,27 @@ pub struct AcceptOwnership<'info> {
     #[account(
         mut,
         seeds = [b"permissions", creator.key().as_ref(), label.as_ref()],
-        bump = encapsulated_data.bump,
-        realloc = 8 + PermissionData::INIT_SPACE,
-        realloc::payer = signer,
-        realloc::zero = true
+        bump = encapsulated_data.bump
       )]
     pub encapsulated_data: Account<'info, PermissionData>,
+
+    #[account(
+        mut,
+        seeds = [b"permissioned_wallet".as_ref(), encapsulated_data.owner.as_ref(), label.as_ref()],
+        bump = owner_permissioned_wallet.bump,
+        constraint = owner_permissioned_wallet.main_data_pda == encapsulated_data.key()
+            @ ErrorCode::Unauthorized
+    )]
+    pub owner_permissioned_wallet: Account<'info, PermissionedWallet>,
+
+    #[account(
+        init_if_needed,
+        payer = signer,
+        space = 8 + PermissionedWallet::INIT_SPACE,
+        seeds = [b"permissioned_wallet".as_ref(), signer.key().as_ref(), label.as_ref()],
+        bump,
+    )]
+    pub new_owner_permissioned_wallet: Account<'info, PermissionedWallet>,
 
     #[account(
         seeds = [b"delegated_owner", creator.key().as_ref(), label.as_ref()],
@@ -30,7 +45,7 @@ pub struct AcceptOwnership<'info> {
 }
 
 impl<'info> AcceptOwnership<'info> {
-    pub fn accept_ownership(&mut self, _label: String) -> Result<()> {
+    pub fn accept_ownership(&mut self, _label: String, bumps: &AcceptOwnershipBumps) -> Result<()> {
         let encapsulated_data = &mut self.encapsulated_data;
 
         // check if time is reached
@@ -44,33 +59,22 @@ impl<'info> AcceptOwnership<'info> {
             return Err(error!(ErrorCode::Unauthorized));
         }
 
-        let old_owner = encapsulated_data.owner;
+        // update the owner
         encapsulated_data.owner = self.delegated_owner.new_owner;
+
         // Update the old owner's permission to admin
-        if let Some(old_owner_permission) = encapsulated_data
-            .permissions
-            .iter_mut()
-            .find(|p| p.wallet == old_owner)
-        {
-            old_owner_permission.role = Role::Admin;
-        }
+        self.owner_permissioned_wallet.role = Role::Admin;
 
         // Update the new owner's permission to owner
-        if let Some(new_owner_permission) = encapsulated_data
-            .permissions
-            .iter_mut()
-            .find(|p| p.wallet == self.delegated_owner.new_owner)
-        {
-            new_owner_permission.role = Role::Owner;
-        } else {
-            // Add the new owner's permission to the permission list
-            encapsulated_data.permissions.push(Permission {
+        self.new_owner_permissioned_wallet
+            .set_inner(PermissionedWallet {
                 role: Role::Owner,
+                main_data_pda: encapsulated_data.key(),
+                bump: bumps.new_owner_permissioned_wallet,
                 wallet: self.delegated_owner.new_owner,
                 start_time: 0,
                 end_time: 0,
             });
-        }
 
         Ok(())
     }

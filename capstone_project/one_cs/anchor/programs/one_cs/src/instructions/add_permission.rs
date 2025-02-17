@@ -10,17 +10,31 @@ pub struct AddPermission<'info> {
 
     pub creator: SystemAccount<'info>,
 
+    pub permitted_wallet: SystemAccount<'info>,
+
     #[account(
-      mut,
       seeds = [b"permissions", creator.key().as_ref(), label.as_ref()],
       bump = encapsulated_data.bump,
-      realloc = 8 + PermissionData::INIT_SPACE,
-      realloc::payer = payer,
-      realloc::zero = true
+      has_one = creator
     )]
     pub encapsulated_data: Account<'info, PermissionData>,
 
-    pub permitted_wallet: SystemAccount<'info>,
+    #[account(
+        seeds = [b"permissioned_wallet".as_ref(), payer.key().as_ref(), label.as_ref()],
+        bump = payer_permissioned_wallet.bump,
+        constraint = payer_permissioned_wallet.main_data_pda == encapsulated_data.key()
+            @ ErrorCode::Unauthorized
+    )]
+    pub payer_permissioned_wallet: Account<'info, PermissionedWallet>,
+
+    #[account(
+      init_if_needed,
+      payer = payer,
+      space = 8 + PermissionedWallet::INIT_SPACE,
+      seeds = [b"permissioned_wallet".as_ref(), permitted_wallet.key().as_ref(), label.as_ref()],
+      bump
+    )]
+    pub permissioned_wallet: Account<'info, PermissionedWallet>,
 
     pub system_program: Program<'info, System>,
 }
@@ -32,9 +46,8 @@ impl<'info> AddPermission<'info> {
         role_index: u64,
         start_time: u64,
         end_time: u64,
+        bumps: &AddPermissionBumps,
     ) -> Result<()> {
-        let encapsulated_data = &mut self.encapsulated_data;
-
         let role = match role_index {
             2 => Role::Admin,
             3 => Role::FullAccess,
@@ -42,85 +55,46 @@ impl<'info> AddPermission<'info> {
             _ => return Err(error!(ErrorCode::BadRole)),
         };
 
-        // Check if the payer exists. If not, return an error
-        if !encapsulated_data
-            .permissions
-            .iter()
-            .any(|p| p.wallet == self.payer.key())
+        // Check if the payer has the full access or time limited access. If so, return an error.
+        if self.payer_permissioned_wallet.role == Role::FullAccess
+            || self.payer_permissioned_wallet.role == Role::TimeLimited
         {
             return Err(error!(ErrorCode::Unauthorized));
         }
 
-        let mut permission_type: u8 = 1;
-
-        // Check if the payer has the full access or time limited access. If so, return an error.
-        // If the payer has the admin access, set the permission_type to 2
-        if let Some(permission) = encapsulated_data
-            .permissions
-            .iter_mut()
-            .find(|p| p.wallet == self.payer.key())
-        {
-            if permission.role == Role::FullAccess || permission.role == Role::TimeLimited {
-                return Err(ErrorCode::Unauthorized.into());
-            }
-            if permission.role == Role::Admin {
-                permission_type = 2;
-            }
+        // If time-limited, check start_time < end_time
+        if role == Role::TimeLimited && start_time >= end_time {
+            return Err(error!(ErrorCode::InvalidTime));
         }
-
-        let permitted_wallet = self.permitted_wallet.key();
 
         // If payer is admin, payer can't demote another admin to full access or time limited
-        // Else (providing wallet already exists), update the permission
-        // Else (providing wallet doesn't exist), add the permission
-        if let Some(permission) = encapsulated_data
-            .permissions
-            .iter_mut()
-            .find(|p| p.wallet == permitted_wallet)
-        {
-            if permission_type == 2
-                && permission.role == Role::Admin
+        if !self.permissioned_wallet.to_account_info().data_is_empty() {
+            if self.payer_permissioned_wallet.role == Role::Admin
+                && self.permissioned_wallet.role == Role::Admin
                 && (role == Role::FullAccess || role == Role::TimeLimited)
             {
-                return Err(ErrorCode::Unauthorized.into());
-            }
-
-            // extra check for time limited permission
-            if role == Role::TimeLimited {
-                if start_time >= end_time {
-                    return Err(ErrorCode::InvalidTime.into());
-                }
-
-                permission.start_time = start_time;
-                permission.end_time = end_time;
-            } else {
-                permission.start_time = 0;
-                permission.end_time = 0;
-            }
-
-            permission.role = role;
-        } else {
-            // extra check for time limited permission
-            if role == Role::TimeLimited {
-                if start_time >= end_time {
-                    return Err(ErrorCode::InvalidTime.into());
-                }
-
-                encapsulated_data.permissions.push(Permission {
-                    role: role,
-                    wallet: permitted_wallet,
-                    start_time: start_time,
-                    end_time: end_time,
-                });
-            } else {
-                encapsulated_data.permissions.push(Permission {
-                    role: role,
-                    wallet: permitted_wallet,
-                    start_time: 0,
-                    end_time: 0,
-                });
+                return Err(error!(ErrorCode::Unauthorized));
             }
         }
+
+        // Else (providing wallet already exists), update the permission
+        // Else (providing wallet doesn't exist), add the permission
+        self.permissioned_wallet.set_inner(PermissionedWallet {
+            main_data_pda: self.encapsulated_data.key(),
+            role: role.clone(),
+            wallet: self.permitted_wallet.key(),
+            start_time: if role == Role::TimeLimited {
+                start_time
+            } else {
+                0
+            },
+            end_time: if role == Role::TimeLimited {
+                end_time
+            } else {
+                0
+            },
+            bump: bumps.permissioned_wallet,
+        });
 
         Ok(())
     }

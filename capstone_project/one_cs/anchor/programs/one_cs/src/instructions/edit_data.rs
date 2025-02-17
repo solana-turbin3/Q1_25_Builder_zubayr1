@@ -25,6 +25,14 @@ pub struct EditTextData<'info> {
     )]
     pub encapsulated_data: Account<'info, PermissionData>,
 
+    #[account(
+        seeds = [b"permissioned_wallet".as_ref(), payer.key().as_ref(), label.as_ref()],
+        bump = payer_permissioned_wallet.bump,
+        constraint = payer_permissioned_wallet.main_data_pda == encapsulated_data.key()
+            @ ErrorCode::Unauthorized
+    )]
+    pub payer_permissioned_wallet: Account<'info, PermissionedWallet>,
+
     pub system_program: Program<'info, System>,
 }
 
@@ -32,24 +40,13 @@ impl<'info> EditTextData<'info> {
     pub fn edit_text_data(&mut self, _label: String, data: String) -> Result<()> {
         let encapsulated_data = &mut self.encapsulated_data;
 
-        if !encapsulated_data
-            .permissions
-            .iter()
-            .any(|p| p.wallet == self.payer.key())
-        {
-            return Err(error!(ErrorCode::Unauthorized));
-        }
-
-        if let Some(permission) = encapsulated_data
-            .permissions
-            .iter_mut()
-            .find(|p| p.wallet == self.payer.key())
-        {
-            if permission.role == Role::TimeLimited {
-                let current_time = Clock::get()?.unix_timestamp as u64;
-                if current_time < permission.start_time || current_time > permission.end_time {
-                    return Err(error!(ErrorCode::InvalidTime));
-                }
+        // Check if time limited and if so, check if the current time is between the start and end time
+        if self.payer_permissioned_wallet.role == Role::TimeLimited {
+            let current_time = Clock::get()?.unix_timestamp as u64;
+            if current_time < self.payer_permissioned_wallet.start_time
+                || current_time > self.payer_permissioned_wallet.end_time
+            {
+                return Err(error!(ErrorCode::Unauthorized));
             }
         }
 
@@ -112,6 +109,14 @@ pub struct EditTokenData<'info> {
     pub owner_ata: InterfaceAccount<'info, TokenAccount>,
 
     #[account(
+        seeds = [b"permissioned_wallet".as_ref(), payer.key().as_ref(), label.as_ref()],
+        bump = payer_permissioned_wallet.bump,
+        constraint = payer_permissioned_wallet.main_data_pda == encapsulated_data.key()
+            @ ErrorCode::Unauthorized
+    )]
+    pub payer_permissioned_wallet: Account<'info, PermissionedWallet>,
+
+    #[account(
         mut,
         seeds = [b"permissions", creator.key().as_ref(), label.as_ref()],
         bump = encapsulated_data.bump,
@@ -128,26 +133,13 @@ pub struct EditTokenData<'info> {
 
 impl<'info> EditTokenData<'info> {
     pub fn edit_token_data(&mut self, label: String, amount: u64, is_deposit: bool) -> Result<()> {
-        let encapsulated_data = &mut self.encapsulated_data;
-
-        if !encapsulated_data
-            .permissions
-            .iter()
-            .any(|p| p.wallet == self.payer.key())
-        {
-            return Err(error!(ErrorCode::Unauthorized));
-        }
-
-        if let Some(permission) = encapsulated_data
-            .permissions
-            .iter_mut()
-            .find(|p| p.wallet == self.payer.key())
-        {
-            if permission.role == Role::TimeLimited {
-                let current_time = Clock::get()?.unix_timestamp as u64;
-                if current_time < permission.start_time || current_time > permission.end_time {
-                    return Err(error!(ErrorCode::InvalidTime));
-                }
+        // Check if time limited and if so, check if the current time is between the start and end time
+        if self.payer_permissioned_wallet.role == Role::TimeLimited {
+            let current_time = Clock::get()?.unix_timestamp as u64;
+            if current_time < self.payer_permissioned_wallet.start_time
+                || current_time > self.payer_permissioned_wallet.end_time
+            {
+                return Err(error!(ErrorCode::Unauthorized));
             }
         }
 

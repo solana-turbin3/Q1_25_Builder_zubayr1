@@ -1,9 +1,7 @@
 use crate::state::*;
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
-use anchor_spl::token_interface::{
-    transfer_checked, Mint, TokenAccount, TokenInterface, TransferChecked,
-};
+use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 #[derive(Accounts)]
 #[instruction(label: String)]

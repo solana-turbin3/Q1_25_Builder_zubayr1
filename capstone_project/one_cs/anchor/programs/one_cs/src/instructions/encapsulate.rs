@@ -1,9 +1,7 @@
 use crate::state::*;
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
-use anchor_spl::token_interface::{
-    transfer_checked, Mint, TokenAccount, TokenInterface, TransferChecked,
-};
+use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
 
 #[derive(Accounts)]
 #[instruction(label: String)]
@@ -19,6 +17,15 @@ pub struct EncapsulateText<'info> {
       bump
     )]
     pub encapsulated_data: Account<'info, PermissionData>,
+
+    #[account(
+      init,
+      payer = creator,
+      space = 8 + PermissionedWallet::INIT_SPACE,
+      seeds = [b"permissioned_wallet".as_ref(), creator.key().as_ref(), label.as_ref()],
+      bump
+    )]
+    pub permissioned_wallet: Account<'info, PermissionedWallet>,
 
     pub system_program: Program<'info, System>,
 }
@@ -38,13 +45,16 @@ impl<'info> EncapsulateText<'info> {
                 text: Some(data),
                 token: None,
             },
-            permissions: vec![Permission {
-                role: Role::Owner,
-                wallet: self.creator.key(),
-                start_time: 0,
-                end_time: 0,
-            }],
             bump: bumps.encapsulated_data,
+        });
+
+        self.permissioned_wallet.set_inner(PermissionedWallet {
+            main_data_pda: self.encapsulated_data.key(),
+            role: Role::Owner,
+            wallet: self.creator.key(),
+            start_time: 0,
+            end_time: 0,
+            bump: bumps.permissioned_wallet,
         });
 
         Ok(())
@@ -59,14 +69,6 @@ pub struct EncapsulateToken<'info> {
 
     #[account(mut)]
     pub token_mint: InterfaceAccount<'info, Mint>,
-
-    #[account(
-      init_if_needed,
-      payer = creator,
-      associated_token::mint = token_mint,
-      associated_token::authority = creator,
-    )]
-    pub creator_ata: InterfaceAccount<'info, TokenAccount>,
 
     #[account(
       seeds = [b"escrow", creator.key().as_ref(), label.as_ref()],
@@ -88,6 +90,15 @@ pub struct EncapsulateToken<'info> {
       bump
     )]
     pub encapsulated_data: Account<'info, PermissionData>,
+
+    #[account(
+        init,
+        payer = creator,
+        space = 8 + PermissionedWallet::INIT_SPACE,
+        seeds = [b"permissioned_wallet".as_ref(), creator.key().as_ref(), label.as_ref()],
+        bump
+      )]
+    pub permissioned_wallet: Account<'info, PermissionedWallet>,
 
     pub system_program: Program<'info, System>,
     pub token_program: Interface<'info, TokenInterface>,
@@ -114,13 +125,16 @@ impl<'info> EncapsulateToken<'info> {
                 }),
             },
 
-            permissions: vec![Permission {
-                role: Role::Owner,
-                wallet: self.creator.key(),
-                start_time: 0,
-                end_time: 0,
-            }],
             bump: bumps.encapsulated_data,
+        });
+
+        self.permissioned_wallet.set_inner(PermissionedWallet {
+            main_data_pda: self.encapsulated_data.key(),
+            role: Role::Owner,
+            wallet: self.creator.key(),
+            start_time: 0,
+            end_time: 0,
+            bump: bumps.permissioned_wallet,
         });
 
         Ok(())

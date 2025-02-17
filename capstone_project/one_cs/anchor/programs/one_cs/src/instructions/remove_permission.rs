@@ -10,63 +10,50 @@ pub struct RemovePermission<'info> {
 
     pub creator: SystemAccount<'info>,
 
+    pub permitted_wallet: SystemAccount<'info>,
+
     #[account(
-      mut,
       seeds = [b"permissions", creator.key().as_ref(), label.as_ref()],
       bump = encapsulated_data.bump,
-      realloc = 8 + PermissionData::INIT_SPACE,
-      realloc::payer = payer,
-      realloc::zero = true
     )]
     pub encapsulated_data: Account<'info, PermissionData>,
 
-    pub permitted_wallet: SystemAccount<'info>,
+    #[account(
+      seeds = [b"permissioned_wallet".as_ref(), payer.key().as_ref(), label.as_ref()],
+      bump = payer_permissioned_wallet.bump,
+      constraint = payer_permissioned_wallet.main_data_pda == encapsulated_data.key()
+        @ ErrorCode::Unauthorized
+    )]
+    pub payer_permissioned_wallet: Account<'info, PermissionedWallet>,
+
+    #[account(
+      mut,
+      close = payer,
+      seeds = [b"permissioned_wallet".as_ref(), permitted_wallet.key().as_ref(), label.as_ref()],
+      bump = permissioned_wallet.bump,
+      constraint = permissioned_wallet.main_data_pda == encapsulated_data.key()
+        @ ErrorCode::Unauthorized
+    )]
+    pub permissioned_wallet: Account<'info, PermissionedWallet>,
 
     pub system_program: Program<'info, System>,
 }
 
 impl<'info> RemovePermission<'info> {
     pub fn remove_permission(&mut self, _label: String) -> Result<()> {
-        let encapsulated_data = &mut self.encapsulated_data;
-
-        if !encapsulated_data
-            .permissions
-            .iter()
-            .any(|p| p.wallet == self.payer.key())
+        // Check if the payer has the full access or time limited access. If so, return an error.
+        if self.payer_permissioned_wallet.role == Role::FullAccess
+            || self.payer_permissioned_wallet.role == Role::TimeLimited
         {
             return Err(error!(ErrorCode::Unauthorized));
         }
 
-        let mut permission_type: u8 = 1;
-
-        if let Some(permission) = encapsulated_data
-            .permissions
-            .iter_mut()
-            .find(|p| p.wallet == self.payer.key())
+        // If payer is admin, payer can't remove another admin
+        if self.payer_permissioned_wallet.role == Role::Admin
+            && self.permissioned_wallet.role == Role::Admin
         {
-            if permission.role == Role::FullAccess || permission.role == Role::TimeLimited {
-                return Err(error!(ErrorCode::Unauthorized));
-            }
-            if permission.role == Role::Admin {
-                permission_type = 2;
-            }
+            return Err(error!(ErrorCode::Unauthorized));
         }
-
-        let permitted_wallet = self.permitted_wallet.key();
-
-        if let Some(permission) = encapsulated_data
-            .permissions
-            .iter_mut()
-            .find(|p| p.wallet == permitted_wallet)
-        {
-            if permission_type == 2 && permission.role == Role::Admin {
-                return Err(error!(ErrorCode::Unauthorized));
-            }
-        }
-
-        encapsulated_data
-            .permissions
-            .retain(|p| p.wallet != permitted_wallet);
 
         Ok(())
     }
