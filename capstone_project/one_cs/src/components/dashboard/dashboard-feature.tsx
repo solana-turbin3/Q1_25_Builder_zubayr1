@@ -1,25 +1,38 @@
-'use client'
+"use client";
 
-import { AppHero } from '../ui/ui-layout'
+import { AppHero } from "../ui/ui-layout";
 
 const links: { label: string; href: string }[] = [
-  { label: 'Solana Docs', href: 'https://docs.solana.com/' },
-  { label: 'Solana Faucet', href: 'https://faucet.solana.com/' },
-  { label: 'Solana Cookbook', href: 'https://solanacookbook.com/' },
-  { label: 'Solana Stack Overflow', href: 'https://solana.stackexchange.com/' },
-  { label: 'Solana Developers GitHub', href: 'https://github.com/solana-developers/' },
-]
+  {
+    label: "OneCS GitHub",
+    href: "https://github.com/zubayr1/TURBIN3_Q1_25/tree/main/capstone_project",
+  },
+];
 
-export default function DashboardFeature() {
+export default function OneCsLandingPage() {
   return (
     <div>
-      <AppHero title="gm" subtitle="Say hi to your new Solana dApp." />
+      <AppHero
+        title="Welcome to OneCS"
+        subtitle="Flexible On-Chain Data Encapsulation and Permissioning"
+      />
       <div className="max-w-xl mx-auto py-6 sm:px-6 lg:px-8 text-center">
         <div className="space-y-2">
-          <p>Here are some helpful links to get you started.</p>
+          <p>
+            OneCS (One-Chain Share) is a next-generation protocol for sharing
+            and managing on-chain data with flexible permissions. Easily
+            encapsulate text, tokens, or any asset while granting multiple
+            wallets custom access roles—no multisig required.
+          </p>
+          <p>Here are some helpful links to learn more and get started:</p>
           {links.map((link, index) => (
             <div key={index}>
-              <a href={link.href} className="link" target="_blank" rel="noopener noreferrer">
+              <a
+                href={link.href}
+                className="link"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 {link.label}
               </a>
             </div>
@@ -27,5 +40,5 @@ export default function DashboardFeature() {
         </div>
       </div>
     </div>
-  )
+  );
 }
