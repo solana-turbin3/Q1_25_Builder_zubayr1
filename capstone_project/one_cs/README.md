@@ -92,3 +92,21 @@ Build the web app
 ```shell
 pnpm build
 ```
+
+### Deployment:
+
+#### Deploy to Devnet
+
+```shell
+anchor deploy --provider.cluster devnet
+```
+
+Program Id: 4LN76xfUPPhhuGgtDrN3nk6pwY37AQ5nhyuTegZoxM4N
+
+#### Deploy to Testnet
+
+```shell
+anchor deploy --provider.cluster testnet
+```
+
+Program Id: 4LN76xfUPPhhuGgtDrN3nk6pwY37AQ5nhyuTegZoxM4N
