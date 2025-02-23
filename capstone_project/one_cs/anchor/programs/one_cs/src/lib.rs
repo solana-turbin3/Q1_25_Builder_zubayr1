@@ -9,7 +9,7 @@ pub mod state;
 pub use instructions::*;
 pub use state::*;
 
-declare_id!("coUnmi3oBUtwtd9fjeAvSsJssXh5A5xyPbhpewyzRVF");
+declare_id!("4LN76xfUPPhhuGgtDrN3nk6pwY37AQ5nhyuTegZoxM4N");
 
 #[program]
 pub mod one_cs {

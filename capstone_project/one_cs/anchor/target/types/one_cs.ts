@@ -5,78 +5,55 @@
  * IDL can be found at `target/idl/one_cs.json`.
  */
 export type OneCs = {
-  "address": "coUnmi3oBUtwtd9fjeAvSsJssXh5A5xyPbhpewyzRVF",
-  "metadata": {
-    "name": "oneCs",
-    "version": "0.1.0",
-    "spec": "0.1.0",
-    "description": "Created with Anchor"
-  },
-  "instructions": [
+  address: "4LN76xfUPPhhuGgtDrN3nk6pwY37AQ5nhyuTegZoxM4N";
+  metadata: {
+    name: "oneCs";
+    version: "0.1.0";
+    spec: "0.1.0";
+    description: "Created with Anchor";
+  };
+  instructions: [
     {
-      "name": "acceptOwnership",
-      "docs": [
-        "Accept ownership of the permission data account"
-      ],
-      "discriminator": [
-        172,
-        23,
-        43,
-        13,
-        238,
-        213,
-        85,
-        150
-      ],
-      "accounts": [
+      name: "acceptOwnership";
+      docs: ["Accept ownership of the permission data account"];
+      discriminator: [172, 23, 43, 13, 238, 213, 85, 150];
+      accounts: [
         {
-          "name": "signer",
-          "writable": true,
-          "signer": true
+          name: "signer";
+          writable: true;
+          signer: true;
         },
         {
-          "name": "creator"
+          name: "creator";
         },
         {
-          "name": "encapsulatedData",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "encapsulatedData";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
-                  112,
-                  101,
-                  114,
-                  109,
-                  105,
-                  115,
-                  115,
-                  105,
-                  111,
-                  110,
-                  115
-                ]
+                kind: "const";
+                value: [112, 101, 114, 109, 105, 115, 115, 105, 111, 110, 115];
               },
               {
-                "kind": "account",
-                "path": "creator"
+                kind: "account";
+                path: "creator";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "ownerPermissionedWallet",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "ownerPermissionedWallet";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
+                kind: "const";
+                value: [
                   112,
                   101,
                   114,
@@ -96,28 +73,28 @@ export type OneCs = {
                   108,
                   101,
                   116
-                ]
+                ];
               },
               {
-                "kind": "account",
-                "path": "encapsulated_data.owner",
-                "account": "permissionData"
+                kind: "account";
+                path: "encapsulated_data.owner";
+                account: "permissionData";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "newOwnerPermissionedWallet",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "newOwnerPermissionedWallet";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
+                kind: "const";
+                value: [
                   112,
                   101,
                   114,
@@ -137,26 +114,26 @@ export type OneCs = {
                   108,
                   101,
                   116
-                ]
+                ];
               },
               {
-                "kind": "account",
-                "path": "signer"
+                kind: "account";
+                path: "signer";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "delegatedOwner",
-          "pda": {
-            "seeds": [
+          name: "delegatedOwner";
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
+                kind: "const";
+                value: [
                   100,
                   101,
                   108,
@@ -172,99 +149,74 @@ export type OneCs = {
                   110,
                   101,
                   114
-                ]
+                ];
               },
               {
-                "kind": "account",
-                "path": "creator"
+                kind: "account";
+                path: "creator";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "systemProgram",
-          "address": "11111111111111111111111111111111"
+          name: "systemProgram";
+          address: "11111111111111111111111111111111";
         }
-      ],
-      "args": [
+      ];
+      args: [
         {
-          "name": "label",
-          "type": "string"
+          name: "label";
+          type: "string";
         }
-      ]
+      ];
     },
     {
-      "name": "addPermission",
-      "docs": [
-        "Add a new permission to the permission list"
-      ],
-      "discriminator": [
-        144,
-        66,
-        124,
-        76,
-        232,
-        97,
-        99,
-        77
-      ],
-      "accounts": [
+      name: "addPermission";
+      docs: ["Add a new permission to the permission list"];
+      discriminator: [144, 66, 124, 76, 232, 97, 99, 77];
+      accounts: [
         {
-          "name": "payer",
-          "writable": true,
-          "signer": true
+          name: "payer";
+          writable: true;
+          signer: true;
         },
         {
-          "name": "creator",
-          "relations": [
-            "encapsulatedData"
-          ]
+          name: "creator";
+          relations: ["encapsulatedData"];
         },
         {
-          "name": "permittedWallet"
+          name: "permittedWallet";
         },
         {
-          "name": "encapsulatedData",
-          "pda": {
-            "seeds": [
+          name: "encapsulatedData";
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
-                  112,
-                  101,
-                  114,
-                  109,
-                  105,
-                  115,
-                  115,
-                  105,
-                  111,
-                  110,
-                  115
-                ]
+                kind: "const";
+                value: [112, 101, 114, 109, 105, 115, 115, 105, 111, 110, 115];
               },
               {
-                "kind": "account",
-                "path": "creator"
+                kind: "account";
+                path: "creator";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "payerPermissionedWallet",
-          "pda": {
-            "seeds": [
+          name: "payerPermissionedWallet";
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
+                kind: "const";
+                value: [
                   112,
                   101,
                   114,
@@ -284,27 +236,27 @@ export type OneCs = {
                   108,
                   101,
                   116
-                ]
+                ];
               },
               {
-                "kind": "account",
-                "path": "payer"
+                kind: "account";
+                path: "payer";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "permissionedWallet",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "permissionedWallet";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
+                kind: "const";
+                value: [
                   112,
                   101,
                   114,
@@ -324,112 +276,92 @@ export type OneCs = {
                   108,
                   101,
                   116
-                ]
+                ];
               },
               {
-                "kind": "account",
-                "path": "permittedWallet"
+                kind: "account";
+                path: "permittedWallet";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "systemProgram",
-          "address": "11111111111111111111111111111111"
+          name: "systemProgram";
+          address: "11111111111111111111111111111111";
         }
-      ],
-      "args": [
+      ];
+      args: [
         {
-          "name": "label",
-          "type": "string"
+          name: "label";
+          type: "string";
         },
         {
-          "name": "roleIndex",
-          "type": "u64"
+          name: "roleIndex";
+          type: "u64";
         },
         {
-          "name": "startTime",
-          "type": "u64"
+          name: "startTime";
+          type: "u64";
         },
         {
-          "name": "endTime",
-          "type": "u64"
+          name: "endTime";
+          type: "u64";
         }
-      ]
+      ];
     },
     {
-      "name": "closeEscrowManually",
-      "docs": [
-        "Close the escrow manually"
-      ],
-      "discriminator": [
-        36,
-        79,
-        152,
-        230,
-        201,
-        235,
-        200,
-        40
-      ],
-      "accounts": [
+      name: "closeEscrowManually";
+      docs: ["Close the escrow manually"];
+      discriminator: [36, 79, 152, 230, 201, 235, 200, 40];
+      accounts: [
         {
-          "name": "payer",
-          "writable": true,
-          "signer": true
+          name: "payer";
+          writable: true;
+          signer: true;
         },
         {
-          "name": "creator"
+          name: "creator";
         },
         {
-          "name": "tokenMint",
-          "relations": [
-            "escrow"
-          ]
+          name: "tokenMint";
+          relations: ["escrow"];
         },
         {
-          "name": "escrow",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "escrow";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
-                  101,
-                  115,
-                  99,
-                  114,
-                  111,
-                  119
-                ]
+                kind: "const";
+                value: [101, 115, 99, 114, 111, 119];
               },
               {
-                "kind": "account",
-                "path": "creator"
+                kind: "account";
+                path: "creator";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "vault",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "vault";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "account",
-                "path": "escrow"
+                kind: "account";
+                path: "escrow";
               },
               {
-                "kind": "const",
-                "value": [
+                kind: "const";
+                value: [
                   6,
                   221,
                   246,
@@ -462,16 +394,16 @@ export type OneCs = {
                   255,
                   0,
                   169
-                ]
+                ];
               },
               {
-                "kind": "account",
-                "path": "tokenMint"
+                kind: "account";
+                path: "tokenMint";
               }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
+            ];
+            program: {
+              kind: "const";
+              value: [
                 140,
                 151,
                 37,
@@ -504,22 +436,22 @@ export type OneCs = {
                 233,
                 248,
                 89
-              ]
-            }
-          }
+              ];
+            };
+          };
         },
         {
-          "name": "payerAta",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "payerAta";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "account",
-                "path": "payer"
+                kind: "account";
+                path: "payer";
               },
               {
-                "kind": "const",
-                "value": [
+                kind: "const";
+                value: [
                   6,
                   221,
                   246,
@@ -552,16 +484,16 @@ export type OneCs = {
                   255,
                   0,
                   169
-                ]
+                ];
               },
               {
-                "kind": "account",
-                "path": "tokenMint"
+                kind: "account";
+                path: "tokenMint";
               }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
+            ];
+            program: {
+              kind: "const";
+              value: [
                 140,
                 151,
                 37,
@@ -594,98 +526,75 @@ export type OneCs = {
                 233,
                 248,
                 89
-              ]
-            }
-          }
+              ];
+            };
+          };
         },
         {
-          "name": "encapsulatedData",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "encapsulatedData";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
-                  112,
-                  101,
-                  114,
-                  109,
-                  105,
-                  115,
-                  115,
-                  105,
-                  111,
-                  110,
-                  115
-                ]
+                kind: "const";
+                value: [112, 101, 114, 109, 105, 115, 115, 105, 111, 110, 115];
               },
               {
-                "kind": "account",
-                "path": "creator"
+                kind: "account";
+                path: "creator";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "systemProgram",
-          "address": "11111111111111111111111111111111"
+          name: "systemProgram";
+          address: "11111111111111111111111111111111";
         },
         {
-          "name": "tokenProgram"
+          name: "tokenProgram";
         },
         {
-          "name": "associatedTokenProgram",
-          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+          name: "associatedTokenProgram";
+          address: "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL";
         }
-      ],
-      "args": [
+      ];
+      args: [
         {
-          "name": "label",
-          "type": "string"
+          name: "label";
+          type: "string";
         }
-      ]
+      ];
     },
     {
-      "name": "depositTokens",
-      "docs": [
-        "Deposit tokens into the escrow"
-      ],
-      "discriminator": [
-        176,
-        83,
-        229,
-        18,
-        191,
-        143,
-        176,
-        150
-      ],
-      "accounts": [
+      name: "depositTokens";
+      docs: ["Deposit tokens into the escrow"];
+      discriminator: [176, 83, 229, 18, 191, 143, 176, 150];
+      accounts: [
         {
-          "name": "creator",
-          "writable": true,
-          "signer": true
+          name: "creator";
+          writable: true;
+          signer: true;
         },
         {
-          "name": "tokenMint",
-          "writable": true
+          name: "tokenMint";
+          writable: true;
         },
         {
-          "name": "creatorAta",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "creatorAta";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "account",
-                "path": "creator"
+                kind: "account";
+                path: "creator";
               },
               {
-                "kind": "const",
-                "value": [
+                kind: "const";
+                value: [
                   6,
                   221,
                   246,
@@ -718,16 +627,16 @@ export type OneCs = {
                   255,
                   0,
                   169
-                ]
+                ];
               },
               {
-                "kind": "account",
-                "path": "tokenMint"
+                kind: "account";
+                path: "tokenMint";
               }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
+            ];
+            program: {
+              kind: "const";
+              value: [
                 140,
                 151,
                 37,
@@ -760,49 +669,42 @@ export type OneCs = {
                 233,
                 248,
                 89
-              ]
-            }
-          }
+              ];
+            };
+          };
         },
         {
-          "name": "escrow",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "escrow";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
-                  101,
-                  115,
-                  99,
-                  114,
-                  111,
-                  119
-                ]
+                kind: "const";
+                value: [101, 115, 99, 114, 111, 119];
               },
               {
-                "kind": "account",
-                "path": "creator"
+                kind: "account";
+                path: "creator";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "vault",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "vault";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "account",
-                "path": "escrow"
+                kind: "account";
+                path: "escrow";
               },
               {
-                "kind": "const",
-                "value": [
+                kind: "const";
+                value: [
                   6,
                   221,
                   246,
@@ -835,16 +737,16 @@ export type OneCs = {
                   255,
                   0,
                   169
-                ]
+                ];
               },
               {
-                "kind": "account",
-                "path": "tokenMint"
+                kind: "account";
+                path: "tokenMint";
               }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
+            ];
+            program: {
+              kind: "const";
+              value: [
                 140,
                 151,
                 37,
@@ -877,96 +779,73 @@ export type OneCs = {
                 233,
                 248,
                 89
-              ]
-            }
-          }
+              ];
+            };
+          };
         },
         {
-          "name": "systemProgram",
-          "address": "11111111111111111111111111111111"
+          name: "systemProgram";
+          address: "11111111111111111111111111111111";
         },
         {
-          "name": "tokenProgram"
+          name: "tokenProgram";
         },
         {
-          "name": "associatedTokenProgram",
-          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+          name: "associatedTokenProgram";
+          address: "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL";
         }
-      ],
-      "args": [
+      ];
+      args: [
         {
-          "name": "label",
-          "type": "string"
+          name: "label";
+          type: "string";
         },
         {
-          "name": "amount",
-          "type": "u64"
+          name: "amount";
+          type: "u64";
         }
-      ]
+      ];
     },
     {
-      "name": "editTextData",
-      "docs": [
-        "Edit the encapsulated text data"
-      ],
-      "discriminator": [
-        157,
-        69,
-        231,
-        1,
-        177,
-        26,
-        172,
-        93
-      ],
-      "accounts": [
+      name: "editTextData";
+      docs: ["Edit the encapsulated text data"];
+      discriminator: [157, 69, 231, 1, 177, 26, 172, 93];
+      accounts: [
         {
-          "name": "payer",
-          "writable": true,
-          "signer": true
+          name: "payer";
+          writable: true;
+          signer: true;
         },
         {
-          "name": "creator"
+          name: "creator";
         },
         {
-          "name": "encapsulatedData",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "encapsulatedData";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
-                  112,
-                  101,
-                  114,
-                  109,
-                  105,
-                  115,
-                  115,
-                  105,
-                  111,
-                  110,
-                  115
-                ]
+                kind: "const";
+                value: [112, 101, 114, 109, 105, 115, 115, 105, 111, 110, 115];
               },
               {
-                "kind": "account",
-                "path": "creator"
+                kind: "account";
+                path: "creator";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "payerPermissionedWallet",
-          "pda": {
-            "seeds": [
+          name: "payerPermissionedWallet";
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
+                kind: "const";
+                value: [
                   112,
                   101,
                   114,
@@ -986,110 +865,90 @@ export type OneCs = {
                   108,
                   101,
                   116
-                ]
+                ];
               },
               {
-                "kind": "account",
-                "path": "payer"
+                kind: "account";
+                path: "payer";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "systemProgram",
-          "address": "11111111111111111111111111111111"
+          name: "systemProgram";
+          address: "11111111111111111111111111111111";
         }
-      ],
-      "args": [
+      ];
+      args: [
         {
-          "name": "label",
-          "type": "string"
+          name: "label";
+          type: "string";
         },
         {
-          "name": "data",
-          "type": "string"
+          name: "data";
+          type: "string";
         }
-      ]
+      ];
     },
     {
-      "name": "editTokenData",
-      "docs": [
-        "Edit the encapsulated token data"
-      ],
-      "discriminator": [
-        21,
-        83,
-        124,
-        93,
-        244,
-        13,
-        242,
-        112
-      ],
-      "accounts": [
+      name: "editTokenData";
+      docs: ["Edit the encapsulated token data"];
+      discriminator: [21, 83, 124, 93, 244, 13, 242, 112];
+      accounts: [
         {
-          "name": "payer",
-          "writable": true,
-          "signer": true
+          name: "payer";
+          writable: true;
+          signer: true;
         },
         {
-          "name": "creator"
+          name: "creator";
         },
         {
-          "name": "taker"
+          name: "taker";
         },
         {
-          "name": "owner"
+          name: "owner";
         },
         {
-          "name": "tokenMint",
-          "relations": [
-            "escrow"
-          ]
+          name: "tokenMint";
+          relations: ["escrow"];
         },
         {
-          "name": "escrow",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "escrow";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
-                  101,
-                  115,
-                  99,
-                  114,
-                  111,
-                  119
-                ]
+                kind: "const";
+                value: [101, 115, 99, 114, 111, 119];
               },
               {
-                "kind": "account",
-                "path": "creator"
+                kind: "account";
+                path: "creator";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "vault",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "vault";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "account",
-                "path": "escrow"
+                kind: "account";
+                path: "escrow";
               },
               {
-                "kind": "const",
-                "value": [
+                kind: "const";
+                value: [
                   6,
                   221,
                   246,
@@ -1122,16 +981,16 @@ export type OneCs = {
                   255,
                   0,
                   169
-                ]
+                ];
               },
               {
-                "kind": "account",
-                "path": "tokenMint"
+                kind: "account";
+                path: "tokenMint";
               }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
+            ];
+            program: {
+              kind: "const";
+              value: [
                 140,
                 151,
                 37,
@@ -1164,22 +1023,22 @@ export type OneCs = {
                 233,
                 248,
                 89
-              ]
-            }
-          }
+              ];
+            };
+          };
         },
         {
-          "name": "payerAta",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "payerAta";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "account",
-                "path": "payer"
+                kind: "account";
+                path: "payer";
               },
               {
-                "kind": "const",
-                "value": [
+                kind: "const";
+                value: [
                   6,
                   221,
                   246,
@@ -1212,16 +1071,16 @@ export type OneCs = {
                   255,
                   0,
                   169
-                ]
+                ];
               },
               {
-                "kind": "account",
-                "path": "tokenMint"
+                kind: "account";
+                path: "tokenMint";
               }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
+            ];
+            program: {
+              kind: "const";
+              value: [
                 140,
                 151,
                 37,
@@ -1254,22 +1113,22 @@ export type OneCs = {
                 233,
                 248,
                 89
-              ]
-            }
-          }
+              ];
+            };
+          };
         },
         {
-          "name": "takerAta",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "takerAta";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "account",
-                "path": "taker"
+                kind: "account";
+                path: "taker";
               },
               {
-                "kind": "const",
-                "value": [
+                kind: "const";
+                value: [
                   6,
                   221,
                   246,
@@ -1302,16 +1161,16 @@ export type OneCs = {
                   255,
                   0,
                   169
-                ]
+                ];
               },
               {
-                "kind": "account",
-                "path": "tokenMint"
+                kind: "account";
+                path: "tokenMint";
               }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
+            ];
+            program: {
+              kind: "const";
+              value: [
                 140,
                 151,
                 37,
@@ -1344,22 +1203,22 @@ export type OneCs = {
                 233,
                 248,
                 89
-              ]
-            }
-          }
+              ];
+            };
+          };
         },
         {
-          "name": "ownerAta",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "ownerAta";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "account",
-                "path": "owner"
+                kind: "account";
+                path: "owner";
               },
               {
-                "kind": "const",
-                "value": [
+                kind: "const";
+                value: [
                   6,
                   221,
                   246,
@@ -1392,16 +1251,16 @@ export type OneCs = {
                   255,
                   0,
                   169
-                ]
+                ];
               },
               {
-                "kind": "account",
-                "path": "tokenMint"
+                kind: "account";
+                path: "tokenMint";
               }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
+            ];
+            program: {
+              kind: "const";
+              value: [
                 140,
                 151,
                 37,
@@ -1434,17 +1293,17 @@ export type OneCs = {
                 233,
                 248,
                 89
-              ]
-            }
-          }
+              ];
+            };
+          };
         },
         {
-          "name": "payerPermissionedWallet",
-          "pda": {
-            "seeds": [
+          name: "payerPermissionedWallet";
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
+                kind: "const";
+                value: [
                   112,
                   101,
                   114,
@@ -1464,139 +1323,106 @@ export type OneCs = {
                   108,
                   101,
                   116
-                ]
+                ];
               },
               {
-                "kind": "account",
-                "path": "payer"
+                kind: "account";
+                path: "payer";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "encapsulatedData",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "encapsulatedData";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
-                  112,
-                  101,
-                  114,
-                  109,
-                  105,
-                  115,
-                  115,
-                  105,
-                  111,
-                  110,
-                  115
-                ]
+                kind: "const";
+                value: [112, 101, 114, 109, 105, 115, 115, 105, 111, 110, 115];
               },
               {
-                "kind": "account",
-                "path": "creator"
+                kind: "account";
+                path: "creator";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "systemProgram",
-          "address": "11111111111111111111111111111111"
+          name: "systemProgram";
+          address: "11111111111111111111111111111111";
         },
         {
-          "name": "tokenProgram"
+          name: "tokenProgram";
         },
         {
-          "name": "associatedTokenProgram",
-          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+          name: "associatedTokenProgram";
+          address: "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL";
         }
-      ],
-      "args": [
+      ];
+      args: [
         {
-          "name": "label",
-          "type": "string"
+          name: "label";
+          type: "string";
         },
         {
-          "name": "amount",
-          "type": "u64"
+          name: "amount";
+          type: "u64";
         },
         {
-          "name": "isDeposit",
-          "type": "bool"
+          name: "isDeposit";
+          type: "bool";
         }
-      ]
+      ];
     },
     {
-      "name": "encapsulateText",
-      "docs": [
+      name: "encapsulateText";
+      docs: [
         "Encapsulate the text data and create a new permission data account"
-      ],
-      "discriminator": [
-        29,
-        25,
-        38,
-        151,
-        203,
-        100,
-        139,
-        190
-      ],
-      "accounts": [
+      ];
+      discriminator: [29, 25, 38, 151, 203, 100, 139, 190];
+      accounts: [
         {
-          "name": "creator",
-          "writable": true,
-          "signer": true
+          name: "creator";
+          writable: true;
+          signer: true;
         },
         {
-          "name": "encapsulatedData",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "encapsulatedData";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
-                  112,
-                  101,
-                  114,
-                  109,
-                  105,
-                  115,
-                  115,
-                  105,
-                  111,
-                  110,
-                  115
-                ]
+                kind: "const";
+                value: [112, 101, 114, 109, 105, 115, 115, 105, 111, 110, 115];
               },
               {
-                "kind": "account",
-                "path": "creator"
+                kind: "account";
+                path: "creator";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "permissionedWallet",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "permissionedWallet";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
+                kind: "const";
+                value: [
                   112,
                   101,
                   114,
@@ -1616,97 +1442,79 @@ export type OneCs = {
                   108,
                   101,
                   116
-                ]
+                ];
               },
               {
-                "kind": "account",
-                "path": "creator"
+                kind: "account";
+                path: "creator";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "systemProgram",
-          "address": "11111111111111111111111111111111"
+          name: "systemProgram";
+          address: "11111111111111111111111111111111";
         }
-      ],
-      "args": [
+      ];
+      args: [
         {
-          "name": "label",
-          "type": "string"
+          name: "label";
+          type: "string";
         },
         {
-          "name": "data",
-          "type": "string"
+          name: "data";
+          type: "string";
         }
-      ]
+      ];
     },
     {
-      "name": "encapsulateToken",
-      "docs": [
-        "Encapsulate a token"
-      ],
-      "discriminator": [
-        66,
-        222,
-        86,
-        103,
-        24,
-        153,
-        203,
-        26
-      ],
-      "accounts": [
+      name: "encapsulateToken";
+      docs: ["Encapsulate a token"];
+      discriminator: [66, 222, 86, 103, 24, 153, 203, 26];
+      accounts: [
         {
-          "name": "creator",
-          "writable": true,
-          "signer": true
+          name: "creator";
+          writable: true;
+          signer: true;
         },
         {
-          "name": "tokenMint",
-          "writable": true
+          name: "tokenMint";
+          writable: true;
         },
         {
-          "name": "escrow",
-          "pda": {
-            "seeds": [
+          name: "escrow";
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
-                  101,
-                  115,
-                  99,
-                  114,
-                  111,
-                  119
-                ]
+                kind: "const";
+                value: [101, 115, 99, 114, 111, 119];
               },
               {
-                "kind": "account",
-                "path": "creator"
+                kind: "account";
+                path: "creator";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "vault",
-          "pda": {
-            "seeds": [
+          name: "vault";
+          pda: {
+            seeds: [
               {
-                "kind": "account",
-                "path": "escrow"
+                kind: "account";
+                path: "escrow";
               },
               {
-                "kind": "const",
-                "value": [
+                kind: "const";
+                value: [
                   6,
                   221,
                   246,
@@ -1739,16 +1547,16 @@ export type OneCs = {
                   255,
                   0,
                   169
-                ]
+                ];
               },
               {
-                "kind": "account",
-                "path": "tokenMint"
+                kind: "account";
+                path: "tokenMint";
               }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
+            ];
+            program: {
+              kind: "const";
+              value: [
                 140,
                 151,
                 37,
@@ -1781,50 +1589,38 @@ export type OneCs = {
                 233,
                 248,
                 89
-              ]
-            }
-          }
+              ];
+            };
+          };
         },
         {
-          "name": "encapsulatedData",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "encapsulatedData";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
-                  112,
-                  101,
-                  114,
-                  109,
-                  105,
-                  115,
-                  115,
-                  105,
-                  111,
-                  110,
-                  115
-                ]
+                kind: "const";
+                value: [112, 101, 114, 109, 105, 115, 115, 105, 111, 110, 115];
               },
               {
-                "kind": "account",
-                "path": "creator"
+                kind: "account";
+                path: "creator";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "permissionedWallet",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "permissionedWallet";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
+                kind: "const";
+                value: [
                   112,
                   101,
                   114,
@@ -1844,100 +1640,82 @@ export type OneCs = {
                   108,
                   101,
                   116
-                ]
+                ];
               },
               {
-                "kind": "account",
-                "path": "creator"
+                kind: "account";
+                path: "creator";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "systemProgram",
-          "address": "11111111111111111111111111111111"
+          name: "systemProgram";
+          address: "11111111111111111111111111111111";
         },
         {
-          "name": "tokenProgram"
+          name: "tokenProgram";
         },
         {
-          "name": "associatedTokenProgram",
-          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+          name: "associatedTokenProgram";
+          address: "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL";
         }
-      ],
-      "args": [
+      ];
+      args: [
         {
-          "name": "label",
-          "type": "string"
+          name: "label";
+          type: "string";
         }
-      ]
+      ];
     },
     {
-      "name": "initEscrow",
-      "docs": [
-        "Init escrow"
-      ],
-      "discriminator": [
-        70,
-        46,
-        40,
-        23,
-        6,
-        11,
-        81,
-        139
-      ],
-      "accounts": [
+      name: "initEscrow";
+      docs: ["Init escrow"];
+      discriminator: [70, 46, 40, 23, 6, 11, 81, 139];
+      accounts: [
         {
-          "name": "creator",
-          "writable": true
+          name: "creator";
+          writable: true;
         },
         {
-          "name": "tokenMint"
+          name: "tokenMint";
         },
         {
-          "name": "escrow",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "escrow";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
-                  101,
-                  115,
-                  99,
-                  114,
-                  111,
-                  119
-                ]
+                kind: "const";
+                value: [101, 115, 99, 114, 111, 119];
               },
               {
-                "kind": "account",
-                "path": "creator"
+                kind: "account";
+                path: "creator";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "vault",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "vault";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "account",
-                "path": "escrow"
+                kind: "account";
+                path: "escrow";
               },
               {
-                "kind": "const",
-                "value": [
+                kind: "const";
+                value: [
                   6,
                   221,
                   246,
@@ -1970,16 +1748,16 @@ export type OneCs = {
                   255,
                   0,
                   169
-                ]
+                ];
               },
               {
-                "kind": "account",
-                "path": "tokenMint"
+                kind: "account";
+                path: "tokenMint";
               }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
+            ];
+            program: {
+              kind: "const";
+              value: [
                 140,
                 151,
                 37,
@@ -2012,94 +1790,71 @@ export type OneCs = {
                 233,
                 248,
                 89
-              ]
-            }
-          }
+              ];
+            };
+          };
         },
         {
-          "name": "systemProgram",
-          "address": "11111111111111111111111111111111"
+          name: "systemProgram";
+          address: "11111111111111111111111111111111";
         },
         {
-          "name": "tokenProgram"
+          name: "tokenProgram";
         },
         {
-          "name": "associatedTokenProgram",
-          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+          name: "associatedTokenProgram";
+          address: "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL";
         }
-      ],
-      "args": [
+      ];
+      args: [
         {
-          "name": "label",
-          "type": "string"
+          name: "label";
+          type: "string";
         }
-      ]
+      ];
     },
     {
-      "name": "removePermission",
-      "docs": [
-        "Remove a permission from the permission list"
-      ],
-      "discriminator": [
-        122,
-        51,
-        186,
-        238,
-        78,
-        104,
-        205,
-        204
-      ],
-      "accounts": [
+      name: "removePermission";
+      docs: ["Remove a permission from the permission list"];
+      discriminator: [122, 51, 186, 238, 78, 104, 205, 204];
+      accounts: [
         {
-          "name": "payer",
-          "writable": true,
-          "signer": true
+          name: "payer";
+          writable: true;
+          signer: true;
         },
         {
-          "name": "creator"
+          name: "creator";
         },
         {
-          "name": "permittedWallet"
+          name: "permittedWallet";
         },
         {
-          "name": "encapsulatedData",
-          "pda": {
-            "seeds": [
+          name: "encapsulatedData";
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
-                  112,
-                  101,
-                  114,
-                  109,
-                  105,
-                  115,
-                  115,
-                  105,
-                  111,
-                  110,
-                  115
-                ]
+                kind: "const";
+                value: [112, 101, 114, 109, 105, 115, 115, 105, 111, 110, 115];
               },
               {
-                "kind": "account",
-                "path": "creator"
+                kind: "account";
+                path: "creator";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "payerPermissionedWallet",
-          "pda": {
-            "seeds": [
+          name: "payerPermissionedWallet";
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
+                kind: "const";
+                value: [
                   112,
                   101,
                   114,
@@ -2119,27 +1874,27 @@ export type OneCs = {
                   108,
                   101,
                   116
-                ]
+                ];
               },
               {
-                "kind": "account",
-                "path": "payer"
+                kind: "account";
+                path: "payer";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "permissionedWallet",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "permissionedWallet";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
+                kind: "const";
+                value: [
                   112,
                   101,
                   114,
@@ -2159,98 +1914,75 @@ export type OneCs = {
                   108,
                   101,
                   116
-                ]
+                ];
               },
               {
-                "kind": "account",
-                "path": "permittedWallet"
+                kind: "account";
+                path: "permittedWallet";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "systemProgram",
-          "address": "11111111111111111111111111111111"
+          name: "systemProgram";
+          address: "11111111111111111111111111111111";
         }
-      ],
-      "args": [
+      ];
+      args: [
         {
-          "name": "label",
-          "type": "string"
+          name: "label";
+          type: "string";
         }
-      ]
+      ];
     },
     {
-      "name": "transferOwnership",
-      "docs": [
-        "Transfer ownership of the permission data account"
-      ],
-      "discriminator": [
-        65,
-        177,
-        215,
-        73,
-        53,
-        45,
-        99,
-        47
-      ],
-      "accounts": [
+      name: "transferOwnership";
+      docs: ["Transfer ownership of the permission data account"];
+      discriminator: [65, 177, 215, 73, 53, 45, 99, 47];
+      accounts: [
         {
-          "name": "owner",
-          "writable": true,
-          "signer": true
+          name: "owner";
+          writable: true;
+          signer: true;
         },
         {
-          "name": "creator"
+          name: "creator";
         },
         {
-          "name": "newOwner"
+          name: "newOwner";
         },
         {
-          "name": "encapsulatedData",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "encapsulatedData";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
-                  112,
-                  101,
-                  114,
-                  109,
-                  105,
-                  115,
-                  115,
-                  105,
-                  111,
-                  110,
-                  115
-                ]
+                kind: "const";
+                value: [112, 101, 114, 109, 105, 115, 115, 105, 111, 110, 115];
               },
               {
-                "kind": "account",
-                "path": "creator"
+                kind: "account";
+                path: "creator";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "ownerPermissionedWallet",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "ownerPermissionedWallet";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
+                kind: "const";
+                value: [
                   112,
                   101,
                   114,
@@ -2270,27 +2002,27 @@ export type OneCs = {
                   108,
                   101,
                   116
-                ]
+                ];
               },
               {
-                "kind": "account",
-                "path": "owner"
+                kind: "account";
+                path: "owner";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "newOwnerPermissionedWallet",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "newOwnerPermissionedWallet";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
+                kind: "const";
+                value: [
                   112,
                   101,
                   114,
@@ -2310,27 +2042,27 @@ export type OneCs = {
                   108,
                   101,
                   116
-                ]
+                ];
               },
               {
-                "kind": "account",
-                "path": "newOwner"
+                kind: "account";
+                path: "newOwner";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "delegatedOwner",
-          "writable": true,
-          "pda": {
-            "seeds": [
+          name: "delegatedOwner";
+          writable: true;
+          pda: {
+            seeds: [
               {
-                "kind": "const",
-                "value": [
+                kind: "const";
+                value: [
                   100,
                   101,
                   108,
@@ -2346,290 +2078,254 @@ export type OneCs = {
                   110,
                   101,
                   114
-                ]
+                ];
               },
               {
-                "kind": "account",
-                "path": "creator"
+                kind: "account";
+                path: "creator";
               },
               {
-                "kind": "arg",
-                "path": "label"
+                kind: "arg";
+                path: "label";
               }
-            ]
-          }
+            ];
+          };
         },
         {
-          "name": "systemProgram",
-          "address": "11111111111111111111111111111111"
+          name: "systemProgram";
+          address: "11111111111111111111111111111111";
         }
-      ],
-      "args": [
+      ];
+      args: [
         {
-          "name": "label",
-          "type": "string"
+          name: "label";
+          type: "string";
         },
         {
-          "name": "ownershipTime",
-          "type": "u64"
+          name: "ownershipTime";
+          type: "u64";
         }
-      ]
+      ];
     }
-  ],
-  "accounts": [
+  ];
+  accounts: [
     {
-      "name": "delegatedOwner",
-      "discriminator": [
-        46,
-        106,
-        155,
-        80,
-        149,
-        206,
-        156,
-        161
-      ]
+      name: "delegatedOwner";
+      discriminator: [46, 106, 155, 80, 149, 206, 156, 161];
     },
     {
-      "name": "escrow",
-      "discriminator": [
-        31,
-        213,
-        123,
-        187,
-        186,
-        22,
-        218,
-        155
-      ]
+      name: "escrow";
+      discriminator: [31, 213, 123, 187, 186, 22, 218, 155];
     },
     {
-      "name": "permissionData",
-      "discriminator": [
-        150,
-        112,
-        179,
-        118,
-        211,
-        71,
-        19,
-        75
-      ]
+      name: "permissionData";
+      discriminator: [150, 112, 179, 118, 211, 71, 19, 75];
     },
     {
-      "name": "permissionedWallet",
-      "discriminator": [
-        111,
-        6,
-        73,
-        253,
-        228,
-        82,
-        230,
-        217
-      ]
+      name: "permissionedWallet";
+      discriminator: [111, 6, 73, 253, 228, 82, 230, 217];
     }
-  ],
-  "errors": [
+  ];
+  errors: [
     {
-      "code": 6000,
-      "name": "unauthorized",
-      "msg": "Unauthorized publickey"
+      code: 6000;
+      name: "unauthorized";
+      msg: "Unauthorized publickey";
     },
     {
-      "code": 6001,
-      "name": "badRole",
-      "msg": "Bad role"
+      code: 6001;
+      name: "badRole";
+      msg: "Bad role";
     },
     {
-      "code": 6002,
-      "name": "invalidTime",
-      "msg": "Invalid time"
+      code: 6002;
+      name: "invalidTime";
+      msg: "Invalid time";
     },
     {
-      "code": 6003,
-      "name": "timeNotReached",
-      "msg": "Time not reached"
+      code: 6003;
+      name: "timeNotReached";
+      msg: "Time not reached";
     },
     {
-      "code": 6004,
-      "name": "amountTooLarge",
-      "msg": "Amount too large"
+      code: 6004;
+      name: "amountTooLarge";
+      msg: "Amount too large";
     },
     {
-      "code": 6005,
-      "name": "notOwner",
-      "msg": "Not owner"
+      code: 6005;
+      name: "notOwner";
+      msg: "Not owner";
     }
-  ],
-  "types": [
+  ];
+  types: [
     {
-      "name": "delegatedOwner",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: "delegatedOwner";
+      type: {
+        kind: "struct";
+        fields: [
           {
-            "name": "newOwner",
-            "type": "pubkey"
+            name: "newOwner";
+            type: "pubkey";
           },
           {
-            "name": "ownershipTime",
-            "type": "u64"
+            name: "ownershipTime";
+            type: "u64";
           },
           {
-            "name": "bump",
-            "type": "u8"
+            name: "bump";
+            type: "u8";
           }
-        ]
-      }
+        ];
+      };
     },
     {
-      "name": "encapsulatedData",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: "encapsulatedData";
+      type: {
+        kind: "struct";
+        fields: [
           {
-            "name": "text",
-            "type": {
-              "option": "string"
-            }
+            name: "text";
+            type: {
+              option: "string";
+            };
           },
           {
-            "name": "token",
-            "type": {
-              "option": {
-                "defined": {
-                  "name": "tokenData"
-                }
-              }
-            }
+            name: "token";
+            type: {
+              option: {
+                defined: {
+                  name: "tokenData";
+                };
+              };
+            };
           }
-        ]
-      }
+        ];
+      };
     },
     {
-      "name": "escrow",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: "escrow";
+      type: {
+        kind: "struct";
+        fields: [
           {
-            "name": "creator",
-            "type": "pubkey"
+            name: "creator";
+            type: "pubkey";
           },
           {
-            "name": "tokenMint",
-            "type": "pubkey"
+            name: "tokenMint";
+            type: "pubkey";
           },
           {
-            "name": "bump",
-            "type": "u8"
+            name: "bump";
+            type: "u8";
           }
-        ]
-      }
+        ];
+      };
     },
     {
-      "name": "permissionData",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: "permissionData";
+      type: {
+        kind: "struct";
+        fields: [
           {
-            "name": "creator",
-            "type": "pubkey"
+            name: "creator";
+            type: "pubkey";
           },
           {
-            "name": "owner",
-            "type": "pubkey"
+            name: "owner";
+            type: "pubkey";
           },
           {
-            "name": "label",
-            "type": "string"
+            name: "label";
+            type: "string";
           },
           {
-            "name": "data",
-            "type": {
-              "defined": {
-                "name": "encapsulatedData"
-              }
-            }
+            name: "data";
+            type: {
+              defined: {
+                name: "encapsulatedData";
+              };
+            };
           },
           {
-            "name": "bump",
-            "type": "u8"
+            name: "bump";
+            type: "u8";
           }
-        ]
-      }
+        ];
+      };
     },
     {
-      "name": "permissionedWallet",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: "permissionedWallet";
+      type: {
+        kind: "struct";
+        fields: [
           {
-            "name": "mainDataPda",
-            "type": "pubkey"
+            name: "mainDataPda";
+            type: "pubkey";
           },
           {
-            "name": "role",
-            "type": {
-              "defined": {
-                "name": "role"
-              }
-            }
+            name: "role";
+            type: {
+              defined: {
+                name: "role";
+              };
+            };
           },
           {
-            "name": "wallet",
-            "type": "pubkey"
+            name: "wallet";
+            type: "pubkey";
           },
           {
-            "name": "startTime",
-            "type": "u64"
+            name: "startTime";
+            type: "u64";
           },
           {
-            "name": "endTime",
-            "type": "u64"
+            name: "endTime";
+            type: "u64";
           },
           {
-            "name": "bump",
-            "type": "u8"
+            name: "bump";
+            type: "u8";
           }
-        ]
-      }
+        ];
+      };
     },
     {
-      "name": "role",
-      "type": {
-        "kind": "enum",
-        "variants": [
+      name: "role";
+      type: {
+        kind: "enum";
+        variants: [
           {
-            "name": "owner"
+            name: "owner";
           },
           {
-            "name": "admin"
+            name: "admin";
           },
           {
-            "name": "fullAccess"
+            name: "fullAccess";
           },
           {
-            "name": "timeLimited"
+            name: "timeLimited";
           }
-        ]
-      }
+        ];
+      };
     },
     {
-      "name": "tokenData",
-      "type": {
-        "kind": "struct",
-        "fields": [
+      name: "tokenData";
+      type: {
+        kind: "struct";
+        fields: [
           {
-            "name": "tokenMint",
-            "type": "pubkey"
+            name: "tokenMint";
+            type: "pubkey";
           },
           {
-            "name": "tokenAmount",
-            "type": "u64"
+            name: "tokenAmount";
+            type: "u64";
           }
-        ]
-      }
+        ];
+      };
     }
-  ]
+  ];
 };
