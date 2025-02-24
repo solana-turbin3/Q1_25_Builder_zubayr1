@@ -110,3 +110,11 @@ anchor deploy --provider.cluster testnet
 ```
 
 Program Id: 4LN76xfUPPhhuGgtDrN3nk6pwY37AQ5nhyuTegZoxM4N
+
+ProgramData Address: 8ckAUjrKHhnAJGiEVHeyJb55XWb2MyXYKzxsUxtwhNmK
+
+Authority: 6JCBQe2v2yPteBZxdxiw8btB4zouuDJp6B6deMLoFg6d
+
+Last Deployed In Slot: 362868624
+
+Data Length: 497040 (0x79590) bytes
