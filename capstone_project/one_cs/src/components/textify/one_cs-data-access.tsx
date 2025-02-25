@@ -10,7 +10,6 @@ import { useCluster } from "../cluster/cluster-data-access";
 import { useAnchorProvider } from "../solana/solana-provider";
 import { useTransactionToast } from "../ui/ui-layout";
 import { BN } from "@coral-xyz/anchor";
-import { web3 } from "@coral-xyz/anchor";
 
 interface EncapsulateTextArgs {
   label: string;
