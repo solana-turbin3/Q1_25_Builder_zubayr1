@@ -28,6 +28,12 @@ interface AddPermissionArgs {
   permittedWallet: PublicKey;
 }
 
+interface EditDataArgs {
+  label: string;
+  data: string;
+  creator: PublicKey;
+}
+
 export function useOneCsProgram() {
   const { connection } = useConnection();
   const { cluster } = useCluster();
@@ -163,30 +169,42 @@ export function useOneCsProgramAccount({ account }: { account: PublicKey }) {
     },
   });
 
-  // const closeMutation = useMutation({
-  //   mutationKey: ["one_cs", "close", { cluster, account }],
-  //   mutationFn: () =>
-  //     program.methods.close().accounts({ one_cs: account }).rpc(),
-  //   onSuccess: (tx) => {
-  //     transactionToast(tx);
-  //     return accounts.refetch();
-  //   },
-  // });
+  const editTextData = useMutation<string, Error, EditDataArgs>({
+    mutationKey: ["one_cs", "editData", { cluster, account }],
+    mutationFn: async ({ label, data, creator }) => {
+      const [encapsulatedDataPda] = PublicKey.findProgramAddressSync(
+        [Buffer.from("permissions"), creator.toBuffer(), Buffer.from(label)],
+        programId
+      );
 
-  // const decrementMutation = useMutation({
-  //   mutationKey: ["one_cs", "decrement", { cluster, account }],
-  //   mutationFn: () =>
-  //     program.methods.decrement().accounts({ one_cs: account }).rpc(),
-  //   onSuccess: (tx) => {
-  //     transactionToast(tx);
-  //     return accountQuery.refetch();
-  //   },
-  // });
+      const [payerPermissionedWalletPda] = PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("permissioned_wallet"),
+          creator.toBuffer(),
+          Buffer.from(label),
+        ],
+        programId
+      );
+
+      return program.methods
+        .editTextData(label, data)
+        .accounts({
+          creator,
+          // @ts-ignore
+          encapsulatedData: encapsulatedDataPda,
+          payerPermissionedWallet: payerPermissionedWalletPda,
+        })
+        .rpc();
+    },
+    onSuccess: (tx) => {
+      transactionToast(tx);
+      return accounts.refetch();
+    },
+  });
 
   return {
     accountQuery,
     addPermission,
-    // closeMutation,
-    // decrementMutation,
+    editTextData,
   };
 }
