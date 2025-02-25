@@ -53,6 +53,17 @@ interface AcceptOwnershipArgs {
   creator: PublicKey;
 }
 
+interface EditTokenDataArgs {
+  label: string;
+  payer: PublicKey;
+  creator: PublicKey;
+  taker: PublicKey;
+  owner: PublicKey;
+  tokenMint: PublicKey;
+  amount: BN;
+  isDeposit: boolean;
+}
+
 export function useOneCsProgram() {
   const { connection } = useConnection();
   const { cluster } = useCluster();
@@ -333,10 +344,64 @@ export function useOneCsProgramAccount({ account }: { account: PublicKey }) {
     },
   });
 
+  const editTokenData = useMutation<string, Error, EditTokenDataArgs>({
+    mutationKey: ["one_cs", "editTokenData", { cluster, account }],
+    mutationFn: async ({
+      label,
+      payer,
+      creator,
+      taker,
+      owner,
+      tokenMint,
+      amount,
+      isDeposit,
+    }) => {
+      const [escrowPda] = PublicKey.findProgramAddressSync(
+        [Buffer.from("escrow"), creator.toBuffer(), Buffer.from(label)],
+        programId
+      );
+
+      const [payerPermissionedWalletPda] = PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("permissioned_wallet"),
+          payer.toBuffer(),
+          Buffer.from(label),
+        ],
+        programId
+      );
+
+      const [encapsulatedDataPda] = PublicKey.findProgramAddressSync(
+        [Buffer.from("permissions"), creator.toBuffer(), Buffer.from(label)],
+        programId
+      );
+
+      return program.methods
+        .editTokenData(label, amount, isDeposit)
+        .accounts({
+          creator,
+          taker,
+          owner,
+          // @ts-ignore
+          tokenMint,
+          // @ts-ignore
+          escrow: escrowPda,
+          payerPermissionedWallet: payerPermissionedWalletPda,
+          encapsulatedData: encapsulatedDataPda,
+          tokenProgram: TOKEN_PROGRAM_ID,
+        })
+        .rpc();
+    },
+    onSuccess: (tx) => {
+      transactionToast(tx);
+      return accounts.refetch();
+    },
+  });
+
   return {
     accountQuery,
     addPermission,
     transferOwnership,
     acceptOwnership,
+    editTokenData,
   };
 }

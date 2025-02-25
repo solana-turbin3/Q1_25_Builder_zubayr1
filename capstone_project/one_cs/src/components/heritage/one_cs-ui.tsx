@@ -10,6 +10,7 @@ import { BN } from "@coral-xyz/anchor";
 import { Connection } from "@solana/web3.js";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { ExplorerLink } from "../cluster/cluster-ui";
+import { getAssociatedTokenAddress } from "@solana/spl-token";
 
 interface PermissionData {
   label: string;
@@ -44,6 +45,14 @@ interface AcceptOwnershipModalProps {
   onSubmit: () => void;
   label: string;
   currentOwner: string;
+}
+
+interface EditDataModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: () => void;
+  tokenAmount: BN;
+  tokenMint: PublicKey;
 }
 
 async function getTokenMintAddresses(
@@ -270,6 +279,48 @@ function AcceptOwnershipModal({
           </button>
           <button className="btn btn-primary" onClick={onSubmit}>
             Accept Ownership
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function EditDataModal({
+  isOpen,
+  onClose,
+  onSubmit,
+  tokenAmount,
+  tokenMint,
+}: EditDataModalProps) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal modal-open">
+      <div className="modal-box">
+        <h3 className="font-bold text-lg">Withdraw Token</h3>
+        <div className="py-4 space-y-4">
+          <div className="space-y-2">
+            <p>
+              <span className="font-medium">Token Mint:</span>{" "}
+              {ellipsify(tokenMint.toString())}
+            </p>
+            <p>
+              <span className="font-medium">Amount to Withdraw:</span>{" "}
+              {tokenAmount.toString()}
+            </p>
+          </div>
+          <p className="text-sm opacity-70">
+            This will withdraw all tokens back to your wallet. This action
+            cannot be undone.
+          </p>
+        </div>
+        <div className="modal-action">
+          <button className="btn" onClick={onClose}>
+            Cancel
+          </button>
+          <button className="btn btn-primary" onClick={onSubmit}>
+            Withdraw
           </button>
         </div>
       </div>
@@ -679,8 +730,14 @@ function OneCsCard({ account }: { account: PublicKey }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [isAcceptModalOpen, setIsAcceptModalOpen] = useState(false);
-  const { accountQuery, addPermission, transferOwnership, acceptOwnership } =
-    useOneCsProgramAccount({ account });
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const {
+    accountQuery,
+    addPermission,
+    transferOwnership,
+    acceptOwnership,
+    editTokenData,
+  } = useOneCsProgramAccount({ account });
   const { connection } = useConnection();
   const data = accountQuery.data as PermissionData;
   const [decimals, setDecimals] = useState(9); // default to 9
@@ -751,6 +808,35 @@ function OneCsCard({ account }: { account: PublicKey }) {
       setIsAcceptModalOpen(false);
     } catch (err) {
       toast.error("Error accepting ownership: " + err);
+    }
+  };
+
+  const handleEditData = async () => {
+    try {
+      if (!data?.data.token) {
+        toast.error("No token data found");
+        return;
+      }
+
+      // Get the associated token account for the owner's wallet
+      const takerTokenAccount = await getAssociatedTokenAddress(
+        data.data.token.tokenMint,
+        data.owner
+      );
+
+      editTokenData.mutateAsync({
+        label: data?.label || "",
+        creator: data?.creator,
+        payer: account,
+        owner: account,
+        taker: takerTokenAccount, // Use the token account instead of wallet address
+        amount: data.data.token.tokenAmount,
+        isDeposit: false,
+        tokenMint: data.data.token.tokenMint,
+      });
+      setIsEditModalOpen(false);
+    } catch (err) {
+      toast.error("Error withdrawing tokens: " + err);
     }
   };
 
@@ -838,7 +924,9 @@ function OneCsCard({ account }: { account: PublicKey }) {
                   <button onClick={() => {}}>Remove Permission</button>
                 </li>
                 <li>
-                  <button onClick={() => {}}>Edit Data</button>
+                  <button onClick={() => setIsEditModalOpen(true)}>
+                    Edit Data
+                  </button>
                 </li>
                 <li>
                   <button onClick={() => setIsTransferModalOpen(true)}>
@@ -881,6 +969,14 @@ function OneCsCard({ account }: { account: PublicKey }) {
         onSubmit={handleAcceptOwnership}
         label={data?.label || ""}
         currentOwner={data?.owner.toString() || ""}
+      />
+
+      <EditDataModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onSubmit={handleEditData}
+        tokenAmount={data?.data.token?.tokenAmount || new BN(0)}
+        tokenMint={data?.data.token?.tokenMint || PublicKey.default}
       />
     </div>
   );
