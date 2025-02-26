@@ -175,7 +175,7 @@ export function OneCsCard({ account }: { account: PublicKey }) {
                     {isEditPending ? (
                       <span className="loading loading-spinner loading-sm"></span>
                     ) : (
-                      "Edit Data"
+                      "Withdraw"
                     )}
                   </button>
                 </li>
