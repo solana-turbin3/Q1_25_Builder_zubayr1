@@ -1,16 +1,18 @@
 "use client";
 
-import { getOneCsProgram, getOneCsProgramId } from "@project/anchor";
-import { useConnection } from "@solana/wallet-adapter-react";
-import { Cluster, PublicKey } from "@solana/web3.js";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import toast from "react-hot-toast";
+
+import { getOneCsProgram, getOneCsProgramId } from "@project/anchor";
+import { useConnection } from "@solana/wallet-adapter-react";
+import { Cluster, PublicKey } from "@solana/web3.js";
+import { BN } from "@coral-xyz/anchor";
+import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
+
 import { useCluster } from "../cluster/cluster-data-access";
 import { useAnchorProvider } from "../solana/solana-provider";
 import { useTransactionToast } from "../ui/ui-layout";
-import { BN } from "@coral-xyz/anchor";
-import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 
 interface InitEscrowArgs {
   label: string;
@@ -55,7 +57,6 @@ interface AcceptOwnershipArgs {
 
 interface EditTokenDataArgs {
   label: string;
-  payer: PublicKey;
   creator: PublicKey;
   taker: PublicKey;
   owner: PublicKey;
@@ -348,7 +349,6 @@ export function useOneCsProgramAccount({ account }: { account: PublicKey }) {
     mutationKey: ["one_cs", "editTokenData", { cluster, account }],
     mutationFn: async ({
       label,
-      payer,
       creator,
       taker,
       owner,
@@ -361,14 +361,14 @@ export function useOneCsProgramAccount({ account }: { account: PublicKey }) {
         programId
       );
 
-      const [payerPermissionedWalletPda] = PublicKey.findProgramAddressSync(
-        [
-          Buffer.from("permissioned_wallet"),
-          payer.toBuffer(),
-          Buffer.from(label),
-        ],
-        programId
-      );
+      // const [payerPermissionedWalletPda] = PublicKey.findProgramAddressSync(
+      //   [
+      //     Buffer.from("permissioned_wallet"),
+      //     payer.toBuffer(),
+      //     Buffer.from(label),
+      //   ],
+      //   programId
+      // );
 
       const [encapsulatedDataPda] = PublicKey.findProgramAddressSync(
         [Buffer.from("permissions"), creator.toBuffer(), Buffer.from(label)],
@@ -385,7 +385,6 @@ export function useOneCsProgramAccount({ account }: { account: PublicKey }) {
           tokenMint,
           // @ts-ignore
           escrow: escrowPda,
-          payerPermissionedWallet: payerPermissionedWalletPda,
           encapsulatedData: encapsulatedDataPda,
           tokenProgram: TOKEN_PROGRAM_ID,
         })

@@ -1,12 +1,14 @@
 "use client";
 
+import React from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletButton } from "../solana/solana-provider";
+
 import { AppHero, ellipsify } from "../ui/ui-layout";
 import { ExplorerLink } from "../cluster/cluster-ui";
 import { useOneCsProgram } from "./one_cs-data-access";
-import { OneCsCreate, OneCsList } from "./one_cs-ui";
-import React from "react";
+import { OneCsCreate } from "./one_cs-ui";
+import { OneCsList } from "./oneCSList";
 
 export default function OneCsFeature() {
   const { publicKey } = useWallet();
